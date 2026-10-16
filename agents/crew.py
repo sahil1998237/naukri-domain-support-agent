@@ -148,6 +148,24 @@ def create_composer_agent(llm: Optional[MockLLM] = None) -> Agent:
     )
 
 
+def build_naukri_support_crew(llm: Optional[MockLLM] = None) -> Crew:
+    """
+    Constructs the standard 3-agent CrewAI support crew.
+    Returns:
+        Crew instance containing Retrieval, Lookup, and Composer agents.
+    """
+    active_llm = llm or MockLLM()
+    retrieval_agent = create_retrieval_agent(active_llm)
+    lookup_agent = create_lookup_agent(active_llm)
+    composer_agent = create_composer_agent(active_llm)
+    return Crew(
+        agents=[retrieval_agent, lookup_agent, composer_agent],
+        tasks=[],
+        process=Process.sequential,
+        verbose=False,
+    )
+
+
 # ==============================================================================
 # CREW ORCHESTRATION PIPELINE
 # ==============================================================================

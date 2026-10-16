@@ -1,0 +1,37 @@
+================================================================================
+  NAUKRI.COM DOMAIN SUPPORT AGENT - TASK 15 TOKEN BUDGET GOVERNANCE TRANSCRIPT
+================================================================================
+Execution Timestamp:       2026-10-16T06:16:58.681378+00:00
+Configured Budget Cap:      2000 tokens per request
+Governance Objective:       Prevent denial-of-wallet attacks and recursive agent runaway
+
+--------------------------------------------------------------------------------
+SCENARIO 1: NORMAL CANDIDATE INQUIRY (WITHIN BUDGET)
+--------------------------------------------------------------------------------
+Prompt Snippet:             'Candidate Inquiry regarding application status APP-003 and policy rescheduling. Candidate asks: What is the official tim...'
+Estimated Tokens:           44 tokens
+Budget Comparison:          44 <= 2000 tokens
+Governance Decision:        ACCEPTED (Execution allowed to proceed)
+Cost Impact:                Normal nominal token consumption recorded
+
+--------------------------------------------------------------------------------
+SCENARIO 2: OVERSIZED RUNAWAY REQUEST (EXCEEDING BUDGET CAP)
+--------------------------------------------------------------------------------
+Prompt Snippet:             'ADVERSARIAL_PAYLOAD: Please provide an exhaustive paragraph-by-paragraph historical legal breakdown of all Indian labor ...'
+Estimated Tokens:           3214 tokens
+Budget Comparison:          3214 > 2000 tokens
+Governance Decision:        REJECTED IMMEDIATELY BEFORE LLM INVOCATION
+Exception Raised:           TokenBudgetExceededError
+Diagnostic Message:         GOVERNANCE VIOLATION: Request exceeds maximum token budget. Estimated tokens: 3214 > Allowable limit: 2000. Execution halted to prevent financial runaway and resource exhaustion.
+Cost Incurred:              0 TOKENS (Protected from financial runaway)
+
+--------------------------------------------------------------------------------
+CUMULATIVE GOVERNANCE AUDIT METRICS:
+--------------------------------------------------------------------------------
+  Total Requests Evaluated:  2
+  Accepted Requests:         1
+  Rejected Requests:         1
+  Cumulative Billed Tokens:  44
+================================================================================
+VERDICT: Token Budget Cap Enforced Successfully. Oversized request rejected.
+================================================================================

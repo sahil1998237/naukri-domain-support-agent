@@ -43,17 +43,20 @@ class MockLLM(BaseLLM):
 
     total_tokens: int = Field(default=0)
     request_count: int = Field(default=0)
+    max_token_budget: Optional[int] = Field(default=None)
 
     def __init__(
         self,
         model: str = "mock-naukri-support-llm",
         total_tokens: int = 0,
         request_count: int = 0,
+        max_token_budget: Optional[int] = None,
         **kwargs: Any,
     ):
         super().__init__(model=model, **kwargs)
         self.total_tokens = total_tokens
         self.request_count = request_count
+        self.max_token_budget = max_token_budget
 
     def get_context_window_size(self) -> int:
         """Return context window token capacity."""
@@ -110,6 +113,14 @@ class MockLLM(BaseLLM):
         self.request_count += 1
         prompt = self._extract_prompt_text(messages)
         tokens_in = self._estimate_tokens(prompt)
+
+        # Token Budget Cap Check (Task 15 Governance)
+        if self.max_token_budget is not None and tokens_in > self.max_token_budget:
+            from governance.cost_budget import TokenBudgetExceededError
+            raise TokenBudgetExceededError(
+                requested_tokens=tokens_in,
+                budget_limit=self.max_token_budget,
+            )
 
         # -------------------------------------------------------------
         # Trap 1 Safeguard: Parse only actual execution history

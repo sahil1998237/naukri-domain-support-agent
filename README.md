@@ -4,7 +4,7 @@ A production-grade AI support agent system built for the Naukri.com domain, feat
 
 ---
 
-## 📌 Project Status: Days 1–11 Complete (Phase 1, Phase 2, Phase 3 Complete, Phase 4 in Progress)
+## 📌 Project Status: Days 1–12 Complete (Phase 1, Phase 2, Phase 3 Complete, Phase 4 in Progress — 105 Tests Passing)
 
 - [x] **Day 1: Foundation & Synthetic Dataset (Phase 1)**
   - [x] Python virtual environment isolation (`.venv` on Python 3.13)
@@ -78,7 +78,15 @@ A production-grade AI support agent system built for the Naukri.com domain, feat
   - [x] **Trap 5 Defeated**: Declared `custom_message_types=[StructuredMessage[VerdictModel]]` on Team constructor preventing runtime ValueError
   - [x] Transcripts: `transcripts/task14_review_approve.txt` (approval) & `transcripts/task14_review_revise.txt` (revision)
   - [x] 8-point Day 11 automated test suite (`tests/test_autogen_review.py`)
-  - [x] **Full project test suite passing 97 / 97 tests**
+- [x] **Day 12: Governance, Least-Autonomy & Cost Control (Task 15)**
+  - [x] Least-Autonomy architecture audit (`governance/autonomy.py`): Retrieval (RAG only), Lookup (status only), Composer (zero tools)
+  - [x] Programmatic governance audit report and executive architectural justification
+  - [x] Comprehensive regulatory risk classification document (`governance/risk_classification.md`): Medium-to-High Risk under EU AI Act Annex III and Indian DPDP Act 2023
+  - [x] Token budget manager (`governance/cost_budget.py`) enforcing hard per-request ceiling (2,000 tokens)
+  - [x] Native `MockLLM` budget enforcement raising `TokenBudgetExceededError` on runaway prompts
+  - [x] Demonstration transcript recording budget rejection of 3,214-token payload (`transcripts/task15_budget_reject.txt`)
+  - [x] 8-point Day 12 automated test suite (`tests/test_governance.py`)
+  - [x] **Full project test suite passing 105 / 105 tests**
 
 ---
 
@@ -98,6 +106,11 @@ naukri-support-agent/
 ├── evaluation/
 │   ├── __init__.py                # Evaluation package initializer
 │   └── eval_suite.py              # Task 13: 15-query evaluation suite & 4-dimension scoring engine
+├── governance/
+│   ├── __init__.py                # Governance package initializer
+│   ├── autonomy.py                # Task 15: Least-autonomy enforcement & audit report
+│   ├── cost_budget.py             # Task 15: TokenBudgetManager & cost cap enforcement
+│   └── risk_classification.md     # Task 15: EU AI Act & Indian DPDP Act risk assessment
 ├── knowledge_base/
 │   ├── policies.json              # 12 official domain policy documents (2-5 sentences each)
 │   └── policies.py                # Python loader and programmatic interface for policies
@@ -132,7 +145,8 @@ naukri-support-agent/
 │   ├── test_api.py                # Day 8 test suite (10 assertions)
 │   ├── test_logging_and_evaluation.py # Day 9 test suite (8 assertions)
 │   ├── test_evaluation_execution.py   # Day 10 test suite (8 assertions)
-│   └── test_autogen_review.py         # Day 11 test suite (8 assertions)
+│   ├── test_autogen_review.py         # Day 11 test suite (8 assertions)
+│   └── test_governance.py         # Day 12 test suite (8 assertions)
 ├── transcripts/
 │   ├── task4_grounded_gen.txt     # Task 4 grounded generation transcript
 │   ├── task5_eval_comparison.txt  # Task 5 precision/recall comparison transcript
@@ -143,7 +157,8 @@ naukri-support-agent/
 │   ├── task13_eval_15_queries.txt # Task 13 15-query evaluation suite transcript
 │   ├── task13_eval_metrics.json   # Task 13 structured evaluation metrics output
 │   ├── task14_review_approve.txt  # Task 14 AutoGen review approval transcript
-│   └── task14_review_revise.txt   # Task 14 AutoGen review revision transcript
+│   ├── task14_review_revise.txt   # Task 14 AutoGen review revision transcript
+│   └── task15_budget_reject.txt   # Task 15 token budget rejection transcript
 ├── .gitignore                     # Git ignore rules for venv, cache, DB, and logs
 ├── README.md                      # Project documentation and run guide
 └── requirements.txt               # Pinned project dependencies
@@ -453,13 +468,71 @@ flowchart LR
 
 ---
 
-## 🔮 Next Steps (Day 12: Governance + Cost Control - Task 15)
+## 🛡️ Governance, Least-Autonomy & Cost Control (Task 15)
 
-1. **Least-Autonomy Enforcement**:
-   - Verify that only the Lookup Agent has the status tool wired, while Retrieval Agent only has RAG, and Composer has zero tools.
-   - Formalize the governance architecture report.
-2. **Risk Classification**:
-   - Document domain risk assessment for Naukri.com recruitment and salary data (Medium-to-High risk under EU AI Act & Indian DPDP Act).
-3. **Token & Cost Budget Cap**:
-   - Implement per-request token counters in `MockLLM`.
-   - Set a hard budget cap (e.g. 2,000 tokens) and demonstrate automatic rejection of oversized requests (`transcripts/task15_budget_reject.txt`).
+Day 12 implements enterprise multi-agent governance controls across three mandatory pillars: Least-Autonomy role isolation, statutory Risk Classification, and strict Token Budget Caps.
+
+```mermaid
+flowchart TD
+    subgraph MultiAgentGov[1. Least-Autonomy Boundaries]
+        RA[Retrieval Agent] -->|Read-Only| VKB[(ChromaDB Policy Vectors)]
+        LA[Lookup Agent] -->|Single Record| APP[(Application Records & Escalations)]
+        CA[Composer Agent] -->|Zero Tools| SYN[Pure Response Synthesis]
+    end
+
+    subgraph RiskMgmt[2. Regulatory Risk Classification]
+        RR[Recruitment & Candidate Profiling] --> EU[EU AI Act Annex III: High Risk]
+        RR --> DPDP[Indian DPDP Act 2023: Sensitive Personal Data]
+        RR --> NIST[NIST AI RMF 1.0: Govern & Measure Controls]
+    end
+
+    subgraph CostCtrl[3. Financial & Runaway Governance]
+        REQ[Incoming Prompt] --> TBM{Token Budget Manager}
+        TBM -->|< 2000 Tokens| PASS[Accepted -> MockLLM Execution]
+        TBM -->|>= 2000 Tokens| BLOCK[TokenBudgetExceededError: Execution Intercepted]
+    end
+```
+
+### 1. Least-Autonomy Enforcement (`governance/autonomy.py`)
+- **Principle of Least Privilege**: Each agent in the multi-agent hierarchy operates within the absolute minimum authorization boundary:
+  - **Naukri Policy Retrieval Specialist**: Strictly wired to `retrieve_policy_context`. Has zero access to candidate application records.
+  - **Application Status & Escalation Specialist**: Strictly wired to `check_job_application_status`. Has zero access to policy vector collections.
+  - **Senior Candidate Support Composer**: Equipped with **zero tools** (`tools=[]`). Operates exclusively as a synthesizer of verified upstream findings.
+- **Audit Verification**:
+  ```powershell
+  python governance/autonomy.py
+  ```
+  Programmatically inspects the live `Crew` instance, asserting that no cross-contamination or tool boundary expansion has occurred.
+
+### 2. Risk Classification & Regulatory Assessment (`governance/risk_classification.md`)
+- **Formal Risk Tier**: Formally categorized as **Medium-to-High Risk**.
+- **Statutory Alignment**:
+  - **EU AI Act (Regulation 2024/1689)**: Categorized under **Annex III, Section 4 (*Employment, workers management and access to self-employment*)** requiring mandatory human escalation, dataset governance, and audit trails.
+  - **Indian DPDP Act 2023**: Mandates technical safeguards to prevent unauthorized exposure of candidate mobile numbers and identities.
+  - **NIST AI RMF 1.0**: Maps Govern and Measure functions to tool boundary isolation and budget caps.
+
+### 3. Token Budget Cap & Cost Control (`governance/cost_budget.py`)
+- **Ceiling Configuration**: Configures a hard per-request ceiling of **2,000 tokens**.
+- **Pre-execution Interception**: Heuristic token estimation validates incoming queries before invoking the language model, preventing financial denial-of-wallet attacks and recursive agent runaway.
+- **MockLLM Native Integration**: Updated `MockLLM(max_token_budget=2000)` to raise `TokenBudgetExceededError` if any prompt exceeds the budget limit.
+- **Demonstration Run**:
+  ```powershell
+  python governance/cost_budget.py
+  ```
+- **Demonstration Transcript**:
+  [`transcripts/task15_budget_reject.txt`](file:///d:/antigravity/Naukri.com/transcripts/task15_budget_reject.txt):
+  - **Scenario 1 (Normal Inquiry)**: 44 tokens $\le$ 2,000 ceiling $\rightarrow$ `ACCEPTED`.
+  - **Scenario 2 (Oversized Adversarial Prompt)**: 3,214 tokens $>$ 2,000 ceiling $\rightarrow$ `REJECTED IMMEDIATELY BEFORE LLM INVOCATION` with 0 billed tokens incurred.
+
+---
+
+## 🔮 Next Steps (Day 13: Response Caching & Polishing - Task 16)
+
+1. **Normalized Query Caching (`api/cache.py`)**:
+   - Implement in-memory LRU response caching keyed by normalized query strings.
+   - Strip punctuation, lower-case, and standardize whitespace.
+2. **Empirical Verification (`transcripts/task16_cache_hit.txt`)**:
+   - Demonstrate cache miss (first invocation) vs. cache hit (second identical query).
+   - Show latency improvement and token avoidance proof.
+3. **End-to-End System Integration**:
+   - Wire caching into FastAPI `/ask` endpoint.
