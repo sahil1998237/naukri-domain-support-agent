@@ -4,7 +4,7 @@ A production-grade AI support agent system built for the Naukri.com domain, feat
 
 ---
 
-## 📌 Project Status: Days 1–10 Complete (Phase 1, Phase 2 & Phase 3 Complete)
+## 📌 Project Status: Days 1–11 Complete (Phase 1, Phase 2, Phase 3 Complete, Phase 4 in Progress)
 
 - [x] **Day 1: Foundation & Synthetic Dataset (Phase 1)**
   - [x] Python virtual environment isolation (`.venv` on Python 3.13)
@@ -71,7 +71,14 @@ A production-grade AI support agent system built for the Naukri.com domain, feat
   - [x] Markdown table generation & structured JSON metrics export (`transcripts/task13_eval_metrics.json`)
   - [x] Production benchmark transcript: `transcripts/task13_eval_15_queries.txt`
   - [x] 8-point Day 10 automated test suite (`tests/test_evaluation_execution.py`)
-  - [x] **Full project test suite passing 89 / 89 tests**
+- [x] **Day 11: AutoGen Policy Review Stage (Task 14)**
+  - [x] Installed `autogen-agentchat` and `autogen-ext` with protobuf 5 dependency resolution (`review/autogen_review.py`)
+  - [x] 2-Agent `RoundRobinGroupChat` with `Policy-Compliance-Reviewer` and `Final-Editor`
+  - [x] Structured output contract with Pydantic `output_content_type=VerdictModel`
+  - [x] **Trap 5 Defeated**: Declared `custom_message_types=[StructuredMessage[VerdictModel]]` on Team constructor preventing runtime ValueError
+  - [x] Transcripts: `transcripts/task14_review_approve.txt` (approval) & `transcripts/task14_review_revise.txt` (revision)
+  - [x] 8-point Day 11 automated test suite (`tests/test_autogen_review.py`)
+  - [x] **Full project test suite passing 97 / 97 tests**
 
 ---
 
@@ -86,7 +93,7 @@ naukri-support-agent/
 │   ├── logging_middleware.py      # Task 12: Structured JSON-Lines logging middleware with PII masking
 │   └── main.py                    # Task 11: FastAPI backend (HTTP & WebSocket)
 ├── data/
-│   ├── chroma_db/                 # Persistent ChromaDB vector database storage
+│   ├── chroma_db/                 # Persistent ChromaDB vector database storage (gitignored)
 │   └── job_applications.json     # 50 synthetic application records
 ├── evaluation/
 │   ├── __init__.py                # Evaluation package initializer
@@ -95,7 +102,7 @@ naukri-support-agent/
 │   ├── policies.json              # 12 official domain policy documents (2-5 sentences each)
 │   └── policies.py                # Python loader and programmatic interface for policies
 ├── logs/
-│   └── api_access.jsonl           # Task 12: Production-grade JSON-Lines access log
+│   └── api_access.jsonl           # Task 12: Production-grade JSON-Lines access log (gitignored)
 ├── rag/
 │   ├── chunking.py                # Dual chunking strategies (fixed-size and sentence-based)
 │   ├── indexer.py                 # ChromaDB indexing pipeline using all-MiniLM-L6-v2
@@ -108,6 +115,9 @@ naukri-support-agent/
 │   ├── mock_llm.py                # Task 7 Setup: Deterministic MockLLM (zero API keys)
 │   ├── schemas.py                 # Task 9: Pydantic structured output models
 │   └── tools.py                   # Task 6: Application status & continuous escalation tool
+├── review/
+│   ├── __init__.py                # Review package initializer
+│   └── autogen_review.py          # Task 14: AutoGen 2-agent policy compliance review stage
 ├── scripts/
 │   ├── calibrate_threshold.py     # Empirical similarity threshold calibration script
 │   └── generate_dataset.py        # Seeded, reproducible dataset generator script
@@ -121,7 +131,8 @@ naukri-support-agent/
 │   ├── test_guardrails.py         # Day 7 test suite (10 assertions)
 │   ├── test_api.py                # Day 8 test suite (10 assertions)
 │   ├── test_logging_and_evaluation.py # Day 9 test suite (8 assertions)
-│   └── test_evaluation_execution.py   # Day 10 test suite (8 assertions)
+│   ├── test_evaluation_execution.py   # Day 10 test suite (8 assertions)
+│   └── test_autogen_review.py         # Day 11 test suite (8 assertions)
 ├── transcripts/
 │   ├── task4_grounded_gen.txt     # Task 4 grounded generation transcript
 │   ├── task5_eval_comparison.txt  # Task 5 precision/recall comparison transcript
@@ -130,8 +141,10 @@ naukri-support-agent/
 │   ├── task8_memory_fresh.txt     # Task 8 fresh session reset transcript
 │   ├── task10_guardrails.txt      # Task 10 guardrail demonstration transcript
 │   ├── task13_eval_15_queries.txt # Task 13 15-query evaluation suite transcript
-│   └── task13_eval_metrics.json   # Task 13 structured evaluation metrics output
-├── .gitignore                     # Git ignore rules for venv, cache, and DB artifacts
+│   ├── task13_eval_metrics.json   # Task 13 structured evaluation metrics output
+│   ├── task14_review_approve.txt  # Task 14 AutoGen review approval transcript
+│   └── task14_review_revise.txt   # Task 14 AutoGen review revision transcript
+├── .gitignore                     # Git ignore rules for venv, cache, DB, and logs
 ├── README.md                      # Project documentation and run guide
 └── requirements.txt               # Pinned project dependencies
 ```
@@ -260,7 +273,7 @@ python agents/memory.py
 - `transcripts/task8_memory_multi_turn.txt` (shows entity retention across conversational turns)
 - `transcripts/task8_memory_fresh.txt` (shows clean session isolation with state wiped)
 
-### 5. Run the Full Unified Test Suite (89 Tests)
+### 5. Run the Full Unified Test Suite (97 Tests)
 
 ```powershell
 python -m unittest discover -s tests -p "test_*.py" -v
@@ -268,7 +281,7 @@ python -m unittest discover -s tests -p "test_*.py" -v
 
 *Result:*
 ```text
-Ran 89 tests in 25.873s
+Ran 97 tests in 67.949s
 
 OK
 ```
@@ -413,13 +426,40 @@ Located in `evaluation/eval_suite.py`, the evaluation harness provides automated
 
 ---
 
-## 🔮 Next Steps (Day 11: AutoGen Policy Compliance Review Stage - Task 14)
+## 🤝 AutoGen Multi-Agent Policy Review Stage (Task 14)
 
-1. **AutoGen Installation & Setup**:
-   - Install `autogen-agentchat` and `autogen-ext` dependencies.
-2. **Two-Agent RoundRobinGroupChat**:
-   - Build `Policy-Compliance-Reviewer` agent and `Final-Editor` agent enforcing `output_content_type=VerdictModel`.
-   - Configure `custom_message_types=[StructuredMessage[VerdictModel]]` on the review team.
-3. **Verification Transcripts**:
-   - `transcripts/task14_review_approve.txt` (review approves grounded response).
-   - `transcripts/task14_review_revise.txt` (review intercepts and revises an injected ungrounded claim).
+Day 11 integrates Microsoft AutoGen 0.7+ (`review/autogen_review.py`) as a formal editorial compliance stage operating sequentially after the primary composer:
+
+```mermaid
+flowchart LR
+    A[Candidate Support Draft] --> B[Policy_Compliance_Reviewer]
+    B -->|Audit Critique| C[Final_Editor]
+    C -->|StructuredMessage[VerdictModel]| D{Approved?}
+    D -->|Yes: Score=1.0| E[Deliver Grounded Answer]
+    D -->|No: Hallucination| F[Excise Fabrications & Emit Sanitized Answer]
+```
+
+### 1. Two-Agent Editorial Architecture
+- **Policy_Compliance_Reviewer**: Audits candidate support drafts against official domain policies (`POL-001` through `POL-012`). Confirms timeline accuracy, notice periods, and document requirements. Detects unauthorized or ungrounded claims.
+- **Final_Editor**: Emits a structured Pydantic `VerdictModel` using `output_content_type=VerdictModel`. Either formally certifies compliance (`compliance_score=1.0`, `is_approved=True`) or excises ungrounded claims and delivers a sanitized answer.
+
+### 2. Trap 5 Defeated (AutoGen `custom_message_types` Runtime Crash)
+- In AutoGen 0.7+, configuring `output_content_type=VerdictModel` on an `AssistantAgent` causes runtime `ValueError` crashes in group chat teams if the team does not recognize the custom message type.
+- **Solution**: Explicitly passed `custom_message_types=[StructuredMessage[VerdictModel]]` to `RoundRobinGroupChat`, registering the structured message factory and guaranteeing clean message serialization.
+
+### 3. Demonstration Transcripts Generated
+- [`transcripts/task14_review_approve.txt`](file:///d:/antigravity/Naukri.com/transcripts/task14_review_approve.txt): Fully grounded draft adhering to `POL-001` receives formal certification without modification.
+- [`transcripts/task14_review_revise.txt`](file:///d:/antigravity/Naukri.com/transcripts/task14_review_revise.txt): Draft with an injected ungrounded claim ("INR 50,000 cash joining bonus and unlimited paid leaves") is intercepted by the reviewer, flagged as high regulatory risk, and sanitized by the editor.
+
+---
+
+## 🔮 Next Steps (Day 12: Governance + Cost Control - Task 15)
+
+1. **Least-Autonomy Enforcement**:
+   - Verify that only the Lookup Agent has the status tool wired, while Retrieval Agent only has RAG, and Composer has zero tools.
+   - Formalize the governance architecture report.
+2. **Risk Classification**:
+   - Document domain risk assessment for Naukri.com recruitment and salary data (Medium-to-High risk under EU AI Act & Indian DPDP Act).
+3. **Token & Cost Budget Cap**:
+   - Implement per-request token counters in `MockLLM`.
+   - Set a hard budget cap (e.g. 2,000 tokens) and demonstrate automatic rejection of oversized requests (`transcripts/task15_budget_reject.txt`).

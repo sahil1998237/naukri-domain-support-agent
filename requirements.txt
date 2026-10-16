@@ -20,7 +20,10 @@ uvicorn[standard]>=0.22.0
 websockets>=11.0
 httpx>=0.25.0
 
-# --- Upcoming Phases (Days 11-14) ---
-# autogen-agentchat>=0.2.0
-# autogen-ext>=0.2.0
+# --- Day 11: AutoGen Policy Review Stage (Task 14) ---
+autogen-agentchat>=0.7.0
+autogen-ext>=0.7.0
+googleapis-common-protos<1.64
+
+
 

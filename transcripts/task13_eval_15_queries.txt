@@ -1,7 +1,7 @@
 ================================================================================
   NAUKRI.COM DOMAIN SUPPORT AGENT - TASK 13 EVALUATION REPORT (15 QUERIES)
 ================================================================================
-Execution Timestamp: 2026-10-16T04:51:56.280965+00:00
+Execution Timestamp: 2026-10-16T05:18:12.110140+00:00
 Scoring Rubric: 4 Dimensions (Accuracy, Grounding, Completeness, Safety) on [0.0, 1.0]
 System: Multi-Agent CrewAI + ChromaDB RAG + Defense-in-Depth Guardrails
 
