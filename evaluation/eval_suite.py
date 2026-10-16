@@ -247,10 +247,12 @@ def score_query_result(query_item: Dict[str, Any], response: Any) -> EvaluationS
 def run_evaluation_suite(
     output_transcript: Optional[Path | str] = None,
     log_file: Optional[Path | str] = None,
+    output_json: Optional[Path | str] = None,
 ) -> Dict[str, Any]:
     """
     Executes all 15 queries through the support pipeline, logs to JSON-Lines,
-    scores all 4 dimensions, and writes the formal task transcript.
+    scores all 4 dimensions, computes cohort analytics (in-scope vs out-of-scope),
+    and writes formal task transcripts and metrics files.
     """
     scores: List[EvaluationScore] = []
     lines: List[str] = [
@@ -294,37 +296,85 @@ def run_evaluation_suite(
         )
         lines.append(row)
 
-    # Compute aggregate averages
-    avg_acc = round(sum(s.accuracy for s in scores) / len(scores), 4)
-    avg_grd = round(sum(s.grounding for s in scores) / len(scores), 4)
-    avg_cmp = round(sum(s.completeness for s in scores) / len(scores), 4)
-    avg_sft = round(sum(s.safety for s in scores) / len(scores), 4)
-    avg_composite = round(sum(s.composite_score for s in scores) / len(scores), 4)
+    # Compute cohort splits
+    in_scope_scores = [s for s in scores if s.is_in_scope]
+    out_of_scope_scores = [s for s in scores if not s.is_in_scope]
+
+    def _calc_cohort_averages(cohort: List[EvaluationScore]) -> Dict[str, float]:
+        if not cohort:
+            return {"accuracy": 0.0, "grounding": 0.0, "completeness": 0.0, "safety": 0.0, "composite": 0.0}
+        n = len(cohort)
+        return {
+            "accuracy": round(sum(s.accuracy for s in cohort) / n, 4),
+            "grounding": round(sum(s.grounding for s in cohort) / n, 4),
+            "completeness": round(sum(s.completeness for s in cohort) / n, 4),
+            "safety": round(sum(s.safety for s in cohort) / n, 4),
+            "composite": round(sum(s.composite_score for s in cohort) / n, 4),
+        }
+
+    in_scope_metrics = _calc_cohort_averages(in_scope_scores)
+    out_scope_metrics = _calc_cohort_averages(out_of_scope_scores)
+    overall_metrics = _calc_cohort_averages(scores)
 
     lines.extend([
         "-" * 80,
-        f"Averages: Accuracy: {avg_acc:.2f} | Grounding: {avg_grd:.2f} | "
-        f"Completeness: {avg_cmp:.2f} | Safety: {avg_sft:.2f} | Composite: {avg_composite:.2f}",
+        f"In-Scope Averages (12 Queries):  Acc: {in_scope_metrics['accuracy']:.2f} | Grd: {in_scope_metrics['grounding']:.2f} | Cmp: {in_scope_metrics['completeness']:.2f} | Sft: {in_scope_metrics['safety']:.2f} | Comp: {in_scope_metrics['composite']:.2f}",
+        f"Out-Scope Averages (3 Queries):  Acc: {out_scope_metrics['accuracy']:.2f} | Grd: {out_scope_metrics['grounding']:.2f} | Cmp: {out_scope_metrics['completeness']:.2f} | Sft: {out_scope_metrics['safety']:.2f} | Comp: {out_scope_metrics['composite']:.2f}",
+        f"Overall Macro Averages (15 Total): Acc: {overall_metrics['accuracy']:.2f} | Grd: {overall_metrics['grounding']:.2f} | Cmp: {overall_metrics['completeness']:.2f} | Sft: {overall_metrics['safety']:.2f} | Comp: {overall_metrics['composite']:.2f}",
         "=" * 80,
         "VERDICT: Task 13 Evaluation Suite Completed Successfully.",
         f"All 15 evaluation queries executed across 12 policy topics and 3 edge cases.",
-        f"System achieved an overall composite benchmark score of {avg_composite:.2f} / 1.00.",
+        f"System achieved an overall composite benchmark score of {overall_metrics['composite']:.2f} / 1.00.",
         "=" * 80,
     ])
 
     report_text = "\n".join(lines)
 
+    # Markdown Table Generation
+    md_lines = [
+        "| ID | Topic | In-Scope | Accuracy | Grounding | Completeness | Safety | Composite | Status |",
+        "| :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |",
+    ]
+    for s in scores:
+        in_sc = "Yes" if s.is_in_scope else "No (Edge)"
+        md_lines.append(
+            f"| `{s.query_id}` | {s.topic} | {in_sc} | {s.accuracy:.2f} | {s.grounding:.2f} | {s.completeness:.2f} | {s.safety:.2f} | **{s.composite_score:.2f}** | `{s.execution_status}` |"
+        )
+    md_lines.append(
+        f"| **Overall** | **Macro Average (15 Queries)** | — | **{overall_metrics['accuracy']:.2f}** | **{overall_metrics['grounding']:.2f}** | **{overall_metrics['completeness']:.2f}** | **{overall_metrics['safety']:.2f}** | **{overall_metrics['composite']:.2f}** | — |"
+    )
+    markdown_table = "\n".join(md_lines)
+
+    # Write transcript
     target_path = Path(output_transcript) if output_transcript else PROJECT_ROOT / "transcripts" / "task13_eval_15_queries.txt"
     target_path.parent.mkdir(parents=True, exist_ok=True)
     target_path.write_text(report_text, encoding="utf-8")
 
+    # Write JSON metrics
+    json_path = Path(output_json) if output_json else PROJECT_ROOT / "transcripts" / "task13_eval_metrics.json"
+    metrics_payload = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "total_queries": len(scores),
+        "in_scope_count": len(in_scope_scores),
+        "out_of_scope_count": len(out_of_scope_scores),
+        "overall_metrics": overall_metrics,
+        "in_scope_metrics": in_scope_metrics,
+        "out_of_scope_metrics": out_scope_metrics,
+        "query_results": [asdict(s) for s in scores],
+    }
+    json_path.parent.mkdir(parents=True, exist_ok=True)
+    json_path.write_text(json.dumps(metrics_payload, indent=2), encoding="utf-8")
+
     return {
         "report_text": report_text,
-        "average_accuracy": avg_acc,
-        "average_grounding": avg_grd,
-        "average_completeness": avg_cmp,
-        "average_safety": avg_sft,
-        "average_composite": avg_composite,
+        "markdown_table": markdown_table,
+        "average_accuracy": overall_metrics["accuracy"],
+        "average_grounding": overall_metrics["grounding"],
+        "average_completeness": overall_metrics["completeness"],
+        "average_safety": overall_metrics["safety"],
+        "average_composite": overall_metrics["composite"],
+        "in_scope_metrics": in_scope_metrics,
+        "out_of_scope_metrics": out_scope_metrics,
         "total_queries": len(scores),
         "scores": [asdict(s) for s in scores],
     }
@@ -334,3 +384,6 @@ if __name__ == "__main__":
     print("Running Task 13 Evaluation Suite (15 Queries)...")
     res = run_evaluation_suite()
     print("\n" + res["report_text"])
+    print("\nMarkdown Table Preview:\n")
+    print(res["markdown_table"])
+
