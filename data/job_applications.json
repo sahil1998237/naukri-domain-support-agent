@@ -1,0 +1,402 @@
+[
+  {
+    "record_id": "APP-001",
+    "category": "Software Engineer",
+    "status": "Rejected",
+    "expected_salary_inr": 2025000,
+    "days_since_created": 9,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-002",
+    "category": "HR Executive",
+    "status": "Screening",
+    "expected_salary_inr": 2600000,
+    "days_since_created": 60,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-003",
+    "category": "Software Engineer",
+    "status": "Interview Scheduled",
+    "expected_salary_inr": 2125000,
+    "days_since_created": 37,
+    "flagged_priority_review": true
+  },
+  {
+    "record_id": "APP-004",
+    "category": "Product Manager",
+    "status": "Applied",
+    "expected_salary_inr": 1800000,
+    "days_since_created": 16,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-005",
+    "category": "HR Executive",
+    "status": "Applied",
+    "expected_salary_inr": 2800000,
+    "days_since_created": 31,
+    "flagged_priority_review": true
+  },
+  {
+    "record_id": "APP-006",
+    "category": "Product Manager",
+    "status": "Interview Scheduled",
+    "expected_salary_inr": 2875000,
+    "days_since_created": 27,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-007",
+    "category": "Software Engineer",
+    "status": "Interview Scheduled",
+    "expected_salary_inr": 900000,
+    "days_since_created": 7,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-008",
+    "category": "Data Analyst",
+    "status": "Offered",
+    "expected_salary_inr": 600000,
+    "days_since_created": 43,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-009",
+    "category": "Sales Associate",
+    "status": "Screening",
+    "expected_salary_inr": 1675000,
+    "days_since_created": 23,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-010",
+    "category": "Software Engineer",
+    "status": "Applied",
+    "expected_salary_inr": 1650000,
+    "days_since_created": 27,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-011",
+    "category": "HR Executive",
+    "status": "Applied",
+    "expected_salary_inr": 1775000,
+    "days_since_created": 56,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-012",
+    "category": "HR Executive",
+    "status": "Screening",
+    "expected_salary_inr": 2625000,
+    "days_since_created": 4,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-013",
+    "category": "Sales Associate",
+    "status": "Screening",
+    "expected_salary_inr": 2450000,
+    "days_since_created": 42,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-014",
+    "category": "HR Executive",
+    "status": "Rejected",
+    "expected_salary_inr": 2350000,
+    "days_since_created": 7,
+    "flagged_priority_review": true
+  },
+  {
+    "record_id": "APP-015",
+    "category": "Software Engineer",
+    "status": "Applied",
+    "expected_salary_inr": 475000,
+    "days_since_created": 26,
+    "flagged_priority_review": true
+  },
+  {
+    "record_id": "APP-016",
+    "category": "Data Analyst",
+    "status": "Rejected",
+    "expected_salary_inr": 2625000,
+    "days_since_created": 22,
+    "flagged_priority_review": true
+  },
+  {
+    "record_id": "APP-017",
+    "category": "Product Manager",
+    "status": "Screening",
+    "expected_salary_inr": 2850000,
+    "days_since_created": 56,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-018",
+    "category": "Data Analyst",
+    "status": "Interview Scheduled",
+    "expected_salary_inr": 625000,
+    "days_since_created": 16,
+    "flagged_priority_review": true
+  },
+  {
+    "record_id": "APP-019",
+    "category": "Software Engineer",
+    "status": "Applied",
+    "expected_salary_inr": 900000,
+    "days_since_created": 13,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-020",
+    "category": "Sales Associate",
+    "status": "Screening",
+    "expected_salary_inr": 2000000,
+    "days_since_created": 29,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-021",
+    "category": "Data Analyst",
+    "status": "Screening",
+    "expected_salary_inr": 725000,
+    "days_since_created": 28,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-022",
+    "category": "Sales Associate",
+    "status": "Applied",
+    "expected_salary_inr": 875000,
+    "days_since_created": 18,
+    "flagged_priority_review": true
+  },
+  {
+    "record_id": "APP-023",
+    "category": "Data Analyst",
+    "status": "Interview Scheduled",
+    "expected_salary_inr": 1775000,
+    "days_since_created": 16,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-024",
+    "category": "Sales Associate",
+    "status": "Rejected",
+    "expected_salary_inr": 525000,
+    "days_since_created": 29,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-025",
+    "category": "Data Analyst",
+    "status": "Offered",
+    "expected_salary_inr": 2875000,
+    "days_since_created": 56,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-026",
+    "category": "Data Analyst",
+    "status": "Screening",
+    "expected_salary_inr": 2050000,
+    "days_since_created": 7,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-027",
+    "category": "Sales Associate",
+    "status": "Screening",
+    "expected_salary_inr": 450000,
+    "days_since_created": 42,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-028",
+    "category": "Product Manager",
+    "status": "Screening",
+    "expected_salary_inr": 2025000,
+    "days_since_created": 54,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-029",
+    "category": "Product Manager",
+    "status": "Interview Scheduled",
+    "expected_salary_inr": 325000,
+    "days_since_created": 6,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-030",
+    "category": "Software Engineer",
+    "status": "Screening",
+    "expected_salary_inr": 2700000,
+    "days_since_created": 55,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-031",
+    "category": "Data Analyst",
+    "status": "Applied",
+    "expected_salary_inr": 1050000,
+    "days_since_created": 11,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-032",
+    "category": "Data Analyst",
+    "status": "Offered",
+    "expected_salary_inr": 1600000,
+    "days_since_created": 32,
+    "flagged_priority_review": true
+  },
+  {
+    "record_id": "APP-033",
+    "category": "HR Executive",
+    "status": "Interview Scheduled",
+    "expected_salary_inr": 1825000,
+    "days_since_created": 14,
+    "flagged_priority_review": true
+  },
+  {
+    "record_id": "APP-034",
+    "category": "HR Executive",
+    "status": "Interview Scheduled",
+    "expected_salary_inr": 1575000,
+    "days_since_created": 58,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-035",
+    "category": "Data Analyst",
+    "status": "Applied",
+    "expected_salary_inr": 475000,
+    "days_since_created": 11,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-036",
+    "category": "HR Executive",
+    "status": "Applied",
+    "expected_salary_inr": 1500000,
+    "days_since_created": 1,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-037",
+    "category": "HR Executive",
+    "status": "Screening",
+    "expected_salary_inr": 1525000,
+    "days_since_created": 17,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-038",
+    "category": "Sales Associate",
+    "status": "Screening",
+    "expected_salary_inr": 2800000,
+    "days_since_created": 51,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-039",
+    "category": "Software Engineer",
+    "status": "Interview Scheduled",
+    "expected_salary_inr": 1750000,
+    "days_since_created": 19,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-040",
+    "category": "Product Manager",
+    "status": "Rejected",
+    "expected_salary_inr": 1650000,
+    "days_since_created": 45,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-041",
+    "category": "Product Manager",
+    "status": "Applied",
+    "expected_salary_inr": 2625000,
+    "days_since_created": 51,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-042",
+    "category": "Sales Associate",
+    "status": "Applied",
+    "expected_salary_inr": 2075000,
+    "days_since_created": 43,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-043",
+    "category": "HR Executive",
+    "status": "Interview Scheduled",
+    "expected_salary_inr": 2575000,
+    "days_since_created": 32,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-044",
+    "category": "Sales Associate",
+    "status": "Interview Scheduled",
+    "expected_salary_inr": 775000,
+    "days_since_created": 13,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-045",
+    "category": "Product Manager",
+    "status": "Rejected",
+    "expected_salary_inr": 1225000,
+    "days_since_created": 14,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-046",
+    "category": "Sales Associate",
+    "status": "Offered",
+    "expected_salary_inr": 475000,
+    "days_since_created": 38,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-047",
+    "category": "Software Engineer",
+    "status": "Applied",
+    "expected_salary_inr": 2650000,
+    "days_since_created": 35,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-048",
+    "category": "Software Engineer",
+    "status": "Screening",
+    "expected_salary_inr": 475000,
+    "days_since_created": 48,
+    "flagged_priority_review": false
+  },
+  {
+    "record_id": "APP-049",
+    "category": "Software Engineer",
+    "status": "Rejected",
+    "expected_salary_inr": 1300000,
+    "days_since_created": 4,
+    "flagged_priority_review": true
+  },
+  {
+    "record_id": "APP-050",
+    "category": "Software Engineer",
+    "status": "Screening",
+    "expected_salary_inr": 450000,
+    "days_since_created": 38,
+    "flagged_priority_review": false
+  }
+]

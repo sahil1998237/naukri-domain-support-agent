@@ -1,0 +1,31 @@
+================================================================================
+  NAUKRI.COM DOMAIN SUPPORT AGENT - TASK 8 FRESH SESSION TRANSCRIPT
+================================================================================
+Engine: LangChain InMemoryChatMessageHistory + CrewAI Multi-Agent System
+Session ID: session_candidate_fresh_002
+Demonstration: Clean state initialization with zero carryover from other sessions.
+
+--------------------------------------------------------------------------------
+[Session Initialization Check]
+Session 'session_candidate_fresh_002' has_session: False
+Session 'session_candidate_fresh_002' active_record_id: None
+
+Candidate Query: 'What is the official policy regarding rescheduling an interview slot?'
+Active Session Entity: record_id = None (Expected None)
+Sources Cited:         Policy: POL-003 (Interview Scheduling, Rescheduling, and Cancellation)
+Escalation Needed:     False (Expected False)
+Agents Invoked:        Naukri Policy Retrieval Specialist -> Senior Candidate Support Composer
+
+Agent Response:
+According to Naukri.com Policy [POL-003: Interview Scheduling, Rescheduling, and Cancellation]: A maximum of two reschedule requests are permitted per application lifecycle before the interview slot is permanently forfeit.
+
+--------------------------------------------------------------------------------
+[Session Reset / Clear Demonstration]
+Called clear_session('session_candidate_fresh_002')
+Post-Clear has_session: False (Expected False)
+Post-Clear active_record_id: None (Expected None)
+================================================================================
+VERDICT: Fresh Session Isolation & Reset Confirmed.
+No entity carryover occurred from previous sessions, and clear_session successfully
+wiped all conversational memory.
+================================================================================

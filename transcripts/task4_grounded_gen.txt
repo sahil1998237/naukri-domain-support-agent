@@ -1,0 +1,52 @@
+=== NAUKRI.COM DOMAIN SUPPORT AGENT - TASK 4 TRANSCRIPT ===
+Task: Grounded Generation with Empirically Calibrated Similarity Threshold
+Model: all-MiniLM-L6-v2 | Vector Store: ChromaDB (Cosine Space)
+Empirical Separation Gap: [0.1807, 0.6173] | Calibrated Threshold: 0.4000
+
+--------------------------------------------------------------------------------
+[TEST CASE 1: In-Scope Interview Rescheduling Policy]
+Query: "What is the policy for rescheduling an interview?"
+Strategy: sentence
+Top-1 Hit: POL-003 (Interview Scheduling, Rescheduling, and Cancellation)
+Cosine Similarity: 0.6248 (Threshold: 0.4000 -> PASS)
+Grounded: True
+Generated Answer: According to Naukri.com Policy [POL-003: Interview Scheduling, Rescheduling, and Cancellation]: A maximum of two reschedule requests are permitted per application lifecycle before the interview slot is permanently forfeit.
+
+--------------------------------------------------------------------------------
+[TEST CASE 2: In-Scope Cooling-Off Period Policy]
+Query: "How long is the cooling-off period after a rejection?"
+Strategy: sentence
+Top-1 Hit: POL-010 (Candidate Rejection and Cooling-Off Period)
+Cosine Similarity: 0.7569 (Threshold: 0.4000 -> PASS)
+Grounded: True
+Generated Answer: According to Naukri.com Policy [POL-010: Candidate Rejection and Cooling-Off Period]: Candidates who receive a formal rejection after the interview or screening stage are subject to a mandatory 6-month cooling-off period before reapplying for the same role.
+
+--------------------------------------------------------------------------------
+[TEST CASE 3: In-Scope Notice Period Buyout Assistance]
+Query: "Can I request notice period buyout assistance for an urgent joining date?"
+Strategy: sentence
+Top-1 Hit: POL-008 (Notice Period Buyout and Joining Date Guidelines)
+Cosine Similarity: 0.6334 (Threshold: 0.4000 -> PASS)
+Grounded: True
+Generated Answer: According to Naukri.com Policy [POL-008: Notice Period Buyout and Joining Date Guidelines]: Notice period buyout assistance of up to 30 days basic salary may be approved for critical roles upon business unit head authorization.
+
+--------------------------------------------------------------------------------
+[TEST CASE 4: Out-of-Scope Weather Query (Safety / Anti-Hallucination Guard)]
+Query: "What is the weather forecast for Bangalore today?"
+Strategy: sentence
+Top-1 Hit: POL-009 (Best noise match: Priority Application Review)
+Cosine Similarity: 0.1582 (Threshold: 0.4000 -> REJECT)
+Grounded: False
+Generated Answer: I do not have sufficient policy information in the knowledge base to answer this question. Please contact the Naukri Help Desk or an HR representative.
+
+--------------------------------------------------------------------------------
+[TEST CASE 5: Out-of-Scope Irrelevant Query (Pet in Office)]
+Query: "Can I bring my pet dog to the office on Fridays?"
+Strategy: sentence
+Top-1 Hit: POL-006 (Best noise match: Offer Letter Issuance)
+Cosine Similarity: 0.1807 (Threshold: 0.4000 -> REJECT)
+Grounded: False
+Generated Answer: I do not have sufficient policy information in the knowledge base to answer this question. Please contact the Naukri Help Desk or an HR representative.
+
+================================================================================
+VERDICT: Task 4 Grounded Generation pipeline successfully differentiates in-scope domain queries from out-of-scope inquiries with zero hallucinations.

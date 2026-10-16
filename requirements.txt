@@ -1,0 +1,26 @@
+# Naukri.com Domain Support Agent - Requirements
+
+# --- Day 1: Foundation & Synthetic Dataset ---
+# Standard library: random, json, pathlib, os, unittest
+
+# --- Day 2: Knowledge Base & RAG Indexing ---
+chromadb>=0.4.22
+sentence-transformers>=2.2.2
+pydantic>=2.0.0
+
+# --- Day 5: CrewAI Multi-Agent Assembly ---
+crewai>=1.0.0
+
+# --- Day 6: Memory & Structured Outputs ---
+langchain-core>=0.3.0
+
+# --- Day 8: FastAPI Backend (Task 11) ---
+fastapi>=0.100.0
+uvicorn[standard]>=0.22.0
+websockets>=11.0
+httpx>=0.25.0
+
+# --- Upcoming Phases (Days 11-14) ---
+# autogen-agentchat>=0.2.0
+# autogen-ext>=0.2.0
+
