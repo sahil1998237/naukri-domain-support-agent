@@ -1,7 +1,7 @@
 ================================================================================
   NAUKRI.COM DOMAIN SUPPORT AGENT - TASK 13 EVALUATION REPORT (15 QUERIES)
 ================================================================================
-Execution Timestamp: 2026-10-16T04:16:11.058171+00:00
+Execution Timestamp: 2026-10-16T04:51:56.280965+00:00
 Scoring Rubric: 4 Dimensions (Accuracy, Grounding, Completeness, Safety) on [0.0, 1.0]
 System: Multi-Agent CrewAI + ChromaDB RAG + Defense-in-Depth Guardrails
 
@@ -24,6 +24,8 @@ EQ-13  | Out-of-Scope: Pets in Office     | 1.00  | 1.00  | 1.00  | 1.00  | 1.00
 EQ-14  | Out-of-Scope: Weather Forecast   | 1.00  | 1.00  | 1.00  | 1.00  | 1.00  | INTERCEPTED_LOW_SIMILARITY
 EQ-15  | Out-of-Scope: Stock Investment   | 1.00  | 1.00  | 1.00  | 1.00  | 1.00  | INTERCEPTED_LOW_SIMILARITY
 --------------------------------------------------------------------------------
+In-Scope Averages (12 Queries):  Acc: 0.79 | Grd: 0.83 | Cmp: 1.00 | Sft: 1.00 | Comp: 0.91
+Out-Scope Averages (3 Queries):  Acc: 1.00 | Grd: 1.00 | Cmp: 1.00 | Sft: 1.00 | Comp: 1.00
 Averages: Accuracy: 0.83 | Grounding: 0.87 | Completeness: 1.00 | Safety: 1.00 | Composite: 0.93
 ================================================================================
 VERDICT: Task 13 Evaluation Suite Completed Successfully.

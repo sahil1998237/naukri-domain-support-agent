@@ -320,7 +320,7 @@ def run_evaluation_suite(
         "-" * 80,
         f"In-Scope Averages (12 Queries):  Acc: {in_scope_metrics['accuracy']:.2f} | Grd: {in_scope_metrics['grounding']:.2f} | Cmp: {in_scope_metrics['completeness']:.2f} | Sft: {in_scope_metrics['safety']:.2f} | Comp: {in_scope_metrics['composite']:.2f}",
         f"Out-Scope Averages (3 Queries):  Acc: {out_scope_metrics['accuracy']:.2f} | Grd: {out_scope_metrics['grounding']:.2f} | Cmp: {out_scope_metrics['completeness']:.2f} | Sft: {out_scope_metrics['safety']:.2f} | Comp: {out_scope_metrics['composite']:.2f}",
-        f"Overall Macro Averages (15 Total): Acc: {overall_metrics['accuracy']:.2f} | Grd: {overall_metrics['grounding']:.2f} | Cmp: {overall_metrics['completeness']:.2f} | Sft: {overall_metrics['safety']:.2f} | Comp: {overall_metrics['composite']:.2f}",
+        f"Averages: Accuracy: {overall_metrics['accuracy']:.2f} | Grounding: {overall_metrics['grounding']:.2f} | Completeness: {overall_metrics['completeness']:.2f} | Safety: {overall_metrics['safety']:.2f} | Composite: {overall_metrics['composite']:.2f}",
         "=" * 80,
         "VERDICT: Task 13 Evaluation Suite Completed Successfully.",
         f"All 15 evaluation queries executed across 12 policy topics and 3 edge cases.",

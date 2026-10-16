@@ -4,7 +4,7 @@ A production-grade AI support agent system built for the Naukri.com domain, feat
 
 ---
 
-## 📌 Project Status: Days 1–9 Complete (Phase 1, Phase 2 & Phase 3 in Progress)
+## 📌 Project Status: Days 1–10 Complete (Phase 1, Phase 2 & Phase 3 Complete)
 
 - [x] **Day 1: Foundation & Synthetic Dataset (Phase 1)**
   - [x] Python virtual environment isolation (`.venv` on Python 3.13)
@@ -64,9 +64,14 @@ A production-grade AI support agent system built for the Naukri.com domain, feat
   - [x] Trace ID propagation via `X-Trace-ID` and `X-Response-Time-MS` response headers
   - [x] 15-query evaluation dataset covering all 12 policy topics (POL-001..POL-012) + 3 out-of-scope edge cases (`evaluation/eval_suite.py`)
   - [x] 4-dimension scoring engine (Accuracy, Grounding, Completeness, Safety) with composite scoring
-  - [x] Baseline evaluation transcript: `transcripts/task13_eval_15_queries.txt` achieving **0.93 / 1.00**
   - [x] 8-point Day 9 automated test suite (`tests/test_logging_and_evaluation.py`)
-  - [x] **Full project test suite passing 81 / 81 tests**
+- [x] **Day 10: Evaluation Execution & Formal Metric Analysis (Task 13 Completion)**
+  - [x] Full evaluation execution of 15 queries across the multi-agent pipeline
+  - [x] Comprehensive cohort analytics: In-Scope (0.91) vs Out-of-Scope (1.00) vs Macro Benchmark (**0.93 / 1.00**)
+  - [x] Markdown table generation & structured JSON metrics export (`transcripts/task13_eval_metrics.json`)
+  - [x] Production benchmark transcript: `transcripts/task13_eval_15_queries.txt`
+  - [x] 8-point Day 10 automated test suite (`tests/test_evaluation_execution.py`)
+  - [x] **Full project test suite passing 89 / 89 tests**
 
 ---
 
@@ -115,7 +120,8 @@ naukri-support-agent/
 │   ├── test_memory_schemas.py     # Day 6 test suite (10 assertions)
 │   ├── test_guardrails.py         # Day 7 test suite (10 assertions)
 │   ├── test_api.py                # Day 8 test suite (10 assertions)
-│   └── test_logging_and_evaluation.py # Day 9 test suite (8 assertions)
+│   ├── test_logging_and_evaluation.py # Day 9 test suite (8 assertions)
+│   └── test_evaluation_execution.py   # Day 10 test suite (8 assertions)
 ├── transcripts/
 │   ├── task4_grounded_gen.txt     # Task 4 grounded generation transcript
 │   ├── task5_eval_comparison.txt  # Task 5 precision/recall comparison transcript
@@ -123,7 +129,8 @@ naukri-support-agent/
 │   ├── task8_memory_multi_turn.txt# Task 8 multi-turn session memory transcript
 │   ├── task8_memory_fresh.txt     # Task 8 fresh session reset transcript
 │   ├── task10_guardrails.txt      # Task 10 guardrail demonstration transcript
-│   └── task13_eval_15_queries.txt # Task 13 15-query evaluation suite transcript
+│   ├── task13_eval_15_queries.txt # Task 13 15-query evaluation suite transcript
+│   └── task13_eval_metrics.json   # Task 13 structured evaluation metrics output
 ├── .gitignore                     # Git ignore rules for venv, cache, and DB artifacts
 ├── README.md                      # Project documentation and run guide
 └── requirements.txt               # Pinned project dependencies
@@ -253,7 +260,7 @@ python agents/memory.py
 - `transcripts/task8_memory_multi_turn.txt` (shows entity retention across conversational turns)
 - `transcripts/task8_memory_fresh.txt` (shows clean session isolation with state wiped)
 
-### 5. Run the Full Unified Test Suite (81 Tests)
+### 5. Run the Full Unified Test Suite (89 Tests)
 
 ```powershell
 python -m unittest discover -s tests -p "test_*.py" -v
@@ -261,7 +268,7 @@ python -m unittest discover -s tests -p "test_*.py" -v
 
 *Result:*
 ```text
-Ran 81 tests in 22.737s
+Ran 89 tests in 25.873s
 
 OK
 ```
@@ -398,17 +405,21 @@ Located in `evaluation/eval_suite.py`, the evaluation harness provides automated
   - **Grounding** ($0.0 - 1.0$): Are statements backed by retrieved chunks or official policy citations?
   - **Completeness** ($0.0 - 1.0$): Does the response contain key operational elements (deadlines, portals, contacts)?
   - **Safety** ($0.0 - 1.0$): Was PII protected, injection resisted, and out-of-scope safely deflected?
-- **Empirical Baseline**:
-  - Automatically writes results to `transcripts/task13_eval_15_queries.txt`.
-  - Initial system benchmark composite score: **0.93 / 1.00**.
+- **Empirical Baseline & Formal Cohort Metrics (Task 13 Completion)**:
+  - Automatically writes results to `transcripts/task13_eval_15_queries.txt` and `transcripts/task13_eval_metrics.json`.
+  - **In-Scope Policy Queries (12 Queries)**: Accuracy: 0.79 | Grounding: 0.83 | Completeness: 1.00 | Safety: 1.00 | Composite: **0.91**
+  - **Out-of-Scope Fallback Queries (3 Queries)**: Accuracy: 1.00 | Grounding: 1.00 | Completeness: 1.00 | Safety: 1.00 | Composite: **1.00**
+  - **Overall System Macro Benchmark (15 Total)**: Accuracy: 0.83 | Grounding: 0.87 | Completeness: 1.00 | Safety: 1.00 | Composite: **0.93 / 1.00**
 
 ---
 
-## 🔮 Next Steps (Day 10: Evaluation Execution & Formal Metric Analysis)
+## 🔮 Next Steps (Day 11: AutoGen Policy Compliance Review Stage - Task 14)
 
-1. **Formal Evaluation Execution (Task 14)**:
-   - Run full 15-query evaluation suite against the live API endpoints.
-   - Compute macro and micro averages across Accuracy, Grounding, Completeness, and Safety.
-2. **Failure Mode Analysis**:
-   - Analyze any queries scoring $< 0.80$ and identify retrieval vs. composer bottlenecks.
-   - Refine policy retrieval query reformulation if needed.
+1. **AutoGen Installation & Setup**:
+   - Install `autogen-agentchat` and `autogen-ext` dependencies.
+2. **Two-Agent RoundRobinGroupChat**:
+   - Build `Policy-Compliance-Reviewer` agent and `Final-Editor` agent enforcing `output_content_type=VerdictModel`.
+   - Configure `custom_message_types=[StructuredMessage[VerdictModel]]` on the review team.
+3. **Verification Transcripts**:
+   - `transcripts/task14_review_approve.txt` (review approves grounded response).
+   - `transcripts/task14_review_revise.txt` (review intercepts and revises an injected ungrounded claim).

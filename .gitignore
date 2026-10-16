@@ -20,3 +20,8 @@ htmlcov/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Vector Database Storage & Runtime Logs
+data/chroma_db/
+logs/
+
