@@ -4,7 +4,7 @@ A production-grade AI support agent system built for the Naukri.com domain, feat
 
 ---
 
-## 📌 Project Status: Days 1–12 Complete (Phase 1, Phase 2, Phase 3 Complete, Phase 4 in Progress — 105 Tests Passing)
+## 📌 Project Status: Days 1–13 Complete (Phase 1, Phase 2, Phase 3 & Phase 4 Complete — 113 Tests Passing)
 
 - [x] **Day 1: Foundation & Synthetic Dataset (Phase 1)**
   - [x] Python virtual environment isolation (`.venv` on Python 3.13)
@@ -86,7 +86,14 @@ A production-grade AI support agent system built for the Naukri.com domain, feat
   - [x] Native `MockLLM` budget enforcement raising `TokenBudgetExceededError` on runaway prompts
   - [x] Demonstration transcript recording budget rejection of 3,214-token payload (`transcripts/task15_budget_reject.txt`)
   - [x] 8-point Day 12 automated test suite (`tests/test_governance.py`)
-  - [x] **Full project test suite passing 105 / 105 tests**
+- [x] **Day 13: Response Caching & Latency Optimization (Task 16)**
+  - [x] Query normalization algorithm stripping punctuation, standardizing spacing, and lowercasing (`api/cache.py`)
+  - [x] Thread-safe in-memory `ResponseCache` with LRU capacity limits and TTL expiration
+  - [x] Full integration into FastAPI `POST /ask` (`is_cached: True`, `bypass_cache: True`)
+  - [x] Dedicated monitoring endpoints: `GET /cache/metrics` and `POST /cache/clear`
+  - [x] Demonstration transcript recording 18,372 ms miss vs. 0.038 ms hit (>400,000x speedup, 669 tokens saved): `transcripts/task16_cache_hit.txt`
+  - [x] 8-point Day 13 automated test suite (`tests/test_cache.py`)
+  - [x] **Full project test suite passing 113 / 113 tests**
 
 ---
 
@@ -98,6 +105,7 @@ naukri-support-agent/
 ├── capstone_strategy.md           # Master roadmap and architectural strategy guide
 ├── api/
 │   ├── __init__.py                # API package initializer
+│   ├── cache.py                   # Task 16: LRU ResponseCache with query normalization
 │   ├── logging_middleware.py      # Task 12: Structured JSON-Lines logging middleware with PII masking
 │   └── main.py                    # Task 11: FastAPI backend (HTTP & WebSocket)
 ├── data/
@@ -146,7 +154,8 @@ naukri-support-agent/
 │   ├── test_logging_and_evaluation.py # Day 9 test suite (8 assertions)
 │   ├── test_evaluation_execution.py   # Day 10 test suite (8 assertions)
 │   ├── test_autogen_review.py         # Day 11 test suite (8 assertions)
-│   └── test_governance.py         # Day 12 test suite (8 assertions)
+│   ├── test_governance.py         # Day 12 test suite (8 assertions)
+│   └── test_cache.py              # Day 13 test suite (8 assertions)
 ├── transcripts/
 │   ├── task4_grounded_gen.txt     # Task 4 grounded generation transcript
 │   ├── task5_eval_comparison.txt  # Task 5 precision/recall comparison transcript
@@ -158,7 +167,8 @@ naukri-support-agent/
 │   ├── task13_eval_metrics.json   # Task 13 structured evaluation metrics output
 │   ├── task14_review_approve.txt  # Task 14 AutoGen review approval transcript
 │   ├── task14_review_revise.txt   # Task 14 AutoGen review revision transcript
-│   └── task15_budget_reject.txt   # Task 15 token budget rejection transcript
+│   ├── task15_budget_reject.txt   # Task 15 token budget rejection transcript
+│   └── task16_cache_hit.txt       # Task 16 response caching demonstration transcript
 ├── .gitignore                     # Git ignore rules for venv, cache, DB, and logs
 ├── README.md                      # Project documentation and run guide
 └── requirements.txt               # Pinned project dependencies
@@ -526,13 +536,62 @@ flowchart TD
 
 ---
 
-## 🔮 Next Steps (Day 13: Response Caching & Polishing - Task 16)
+## ⚡ Response Caching & Latency Optimization (Task 16)
 
-1. **Normalized Query Caching (`api/cache.py`)**:
-   - Implement in-memory LRU response caching keyed by normalized query strings.
-   - Strip punctuation, lower-case, and standardize whitespace.
-2. **Empirical Verification (`transcripts/task16_cache_hit.txt`)**:
-   - Demonstrate cache miss (first invocation) vs. cache hit (second identical query).
-   - Show latency improvement and token avoidance proof.
-3. **End-to-End System Integration**:
-   - Wire caching into FastAPI `/ask` endpoint.
+Day 13 implements high-throughput, memory-resident response caching with canonical query normalization (`api/cache.py`), reducing median response latency by over **99.9%** and saving **100%** of downstream model tokens on repeated queries.
+
+```mermaid
+flowchart TD
+    Q[User Support Inquiry] --> N[Canonical Query Normalization]
+    N -->|Lowercased + Punctuation Stripped + Whitespace Collapsed| H{LRU Cache Lookup}
+    H -->|Cache Hit: Instant Memory Retrieval| HIT[Serve Cached Response: 0.038 ms / 0 Tokens]
+    H -->|Cache Miss: First Invocation| MISS[Execute Full Multi-Agent RAG Crew]
+    MISS --> SAVE[Store Normalized Key & Response in Cache]
+    SAVE --> OUT[Return Response to Candidate: 18,372 ms]
+```
+
+### 1. Canonical Query Normalization
+To prevent cache misses caused by minor typographical variations, casing, or unnecessary punctuation, incoming queries are normalized before hashing or dictionary lookup:
+- Strips leading and trailing whitespace.
+- Converts all characters to lowercase.
+- Strips punctuation marks (`?`, `!`, `,`, `"`) while preserving valid hyphenated identifiers (e.g. `APP-003`).
+- Collapses consecutive whitespace blocks into single spaces.
+- **Verification Example**:
+  `"What is the official policy regarding rescheduling a technical interview slot?"` and `  what IS the official policy regarding rescheduling a technical interview slot???  ` resolve to the exact identical key:
+  `"what is the official policy regarding rescheduling a technical interview slot"`.
+
+### 2. Thread-Safe LRU & TTL Cache (`api/cache.py`)
+- **Capacity Eviction**: Least-Recently-Used (LRU) eviction algorithm automatically discards the stalest entry once capacity (default 1,000 entries) is reached.
+- **Time-to-Live (TTL)**: Optional expiration (default 3,600 seconds) ensures policy updates are reflected after document refreshes.
+- **Thread Safety**: Backed by `threading.Lock()` guaranteeing thread-safe operations in high-concurrency FastAPI servers.
+- **Operational Endpoints**:
+  - `GET /cache/metrics`: Exposes real-time operational metrics (hits, misses, hit percentage, token savings).
+  - `POST /cache/clear`: Administrative flush to clear all cached responses.
+
+### 3. Empirical Before vs. After Proof (`transcripts/task16_cache_hit.txt`)
+
+The demonstration engine (`api/cache.py`) executes two sequential queries: an initial inquiry (Cache Miss) followed by an identical query with cosmetic typographical variations (Cache Hit).
+
+| Performance Metric | Phase 1 (Cache Miss) | Phase 2 (Cache Hit) | Empirical Gain |
+| :--- | :--- | :--- | :--- |
+| **End-to-End Latency** | `18,372.07 ms` | `0.038 ms` | **100.00% faster (<0.04 ms)** |
+| **Speedup Factor** | `1.0x` | `480,943.5x` | **>400,000x Speedup** |
+| **Model Tokens Consumed**| `669 tokens` | `0 tokens` | **100% Compute Saved** |
+| **Data Integrity** | Fresh Generation | Bit-for-bit Exact Match | **Verified Identical** |
+
+```powershell
+python api/cache.py
+```
+
+---
+
+## 🔮 Next Steps (Day 14: Final Capstone Polish, Full Repository Audit & Submission Packaging)
+
+1. **System Health & Integrity Audit**:
+   - Re-verify all 113 unit tests pass deterministically.
+   - Verify all 10 demonstration transcripts exist and meet grading criteria.
+2. **Submission Documentation Polish**:
+   - Review and format root README with complete architecture index and grading rubric cross-references.
+   - Clean up temporary files and verify git clean state.
+3. **Final Git Tag & Release**:
+   - Create annotated release tag (e.g., `v1.0.0-capstone-complete`).

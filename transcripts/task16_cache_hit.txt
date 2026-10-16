@@ -1,0 +1,51 @@
+================================================================================
+  NAUKRI.COM DOMAIN SUPPORT AGENT - TASK 16 RESPONSE CACHING TRANSCRIPT
+================================================================================
+Execution Timestamp:       2026-10-16T06:26:49.642521+00:00
+Cache Strategy:             In-Memory LRU with Normalized Query Hashing
+Cache Capacity:             100 entries (TTL: 3600s)
+Objective:                  Demonstrate latency reduction & token avoidance on identical queries
+
+--------------------------------------------------------------------------------
+QUERY NORMALIZATION VERIFICATION:
+--------------------------------------------------------------------------------
+Query 1 (Original):         'What is the official policy regarding rescheduling a technical interview slot?'
+Normalized Key 1:           'what is the official policy regarding rescheduling a technical interview slot'
+Query 2 (Typo/Whitespace):  '  what IS the official policy regarding rescheduling a technical interview slot???  '
+Normalized Key 2:           'what is the official policy regarding rescheduling a technical interview slot'
+Keys Identical:             True (Guarantees Cache Hit)
+
+--------------------------------------------------------------------------------
+PHASE 1: INVOCATION 1 - INITIAL QUERY (CACHE MISS)
+--------------------------------------------------------------------------------
+Cache Lookup Status:        CACHE_MISS (Entry not found in cache)
+Lookup Duration:            0.014 ms
+Execution Mode:             Full CrewAI Multi-Agent Pipeline & Knowledge Base RAG
+Pipeline Latency:           18372.06 ms
+Total End-to-End Latency:   18372.07 ms
+Tokens Consumed:            669 tokens
+Generated Answer Excerpt:   'According to Naukri.com Policy [POL-003: Interview Scheduling, Rescheduling, and Cancellation]: A ma...'
+Cache Action:               Stored normalized key in LRU memory
+
+--------------------------------------------------------------------------------
+PHASE 2: INVOCATION 2 - REPEATED QUERY (CACHE HIT)
+--------------------------------------------------------------------------------
+Cache Lookup Status:        CACHE_HIT (Retrieved from LRU memory)
+Total End-to-End Latency:   0.038 ms
+Execution Mode:             Zero LLM Invocations (Served directly from memory)
+Tokens Consumed:            0 TOKENS (100% compute savings)
+Cached Answer Excerpt:      'According to Naukri.com Policy [POL-003: Interview Scheduling, Rescheduling, and Cancellation]: A ma...'
+Data Integrity:             Matches Phase 1 Output Perfectly: True
+
+--------------------------------------------------------------------------------
+PHASE 3: BEFORE vs. AFTER EMPIRICAL EVIDENCE & PERFORMANCE GAINS
+--------------------------------------------------------------------------------
+  Metric                     | Cache Miss (Phase 1) | Cache Hit (Phase 2)  | Improvement
+  ---------------------------+----------------------+----------------------+------------------
+  Latency (ms)               |           18372.07 ms |              0.038 ms | 100.00% faster
+  Speedup Factor             |                 1.0x |           480943.5x | 480943.5x speedup
+  Model Tokens Consumed      |                669 t |                  0 t | 100% saved
+  Total Cache Hits Recorded  |                    0 |                    1 | Hit Rate: 50.0%
+================================================================================
+VERDICT: Task 16 Response Caching Operational. Verified 100x+ latency speedup and zero token waste.
+================================================================================

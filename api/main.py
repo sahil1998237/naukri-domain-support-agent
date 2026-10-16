@@ -44,6 +44,7 @@ from rag.indexer import (
     get_chroma_client,
     get_embedding_function,
 )
+from api.cache import get_response_cache, normalize_query
 
 logger = logging.getLogger("naukri_api")
 logging.basicConfig(level=logging.INFO)
@@ -79,6 +80,7 @@ class AskRequest(BaseModel):
     """Candidate inquiry request payload."""
     query: str = Field(..., description="Candidate question or support inquiry")
     session_id: Optional[str] = Field(default=None, description="Optional conversational session ID")
+    bypass_cache: bool = Field(default=False, description="Optionally bypass response cache")
 
     @field_validator("query")
     @classmethod
@@ -105,6 +107,7 @@ class AskResponse(BaseModel):
     groundedness_verified: bool = True
     session_id: str
     execution_status: str = "COMPLETED_SAFE"
+    is_cached: bool = False
     timestamp: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
 
@@ -147,13 +150,18 @@ class HealthResponse(BaseModel):
 # CORE GUARDED EXECUTION PIPELINE
 # ==============================================================================
 
-def execute_guarded_ask(query: str, session_id: Optional[str] = None) -> AskResponse:
+def execute_guarded_ask(
+    query: str,
+    session_id: Optional[str] = None,
+    bypass_cache: bool = False,
+) -> AskResponse:
     """
     Executes the end-to-end support pipeline:
     1. Input PII masking (redacts Indian phone numbers and emails)
     2. Input Prompt-Injection detection (intercepts adversarial jailbreaks)
-    3. Multi-agent crew execution with session memory
-    4. Output Groundedness verification (enforces calibrated 0.4000 threshold)
+    3. Response caching lookup via normalized query key (Task 16)
+    4. Multi-agent crew execution with session memory
+    5. Output Groundedness verification (enforces calibrated 0.4000 threshold)
     """
     effective_session_id = session_id or f"session_{uuid.uuid4().hex[:8]}"
 
@@ -177,7 +185,19 @@ def execute_guarded_ask(query: str, session_id: Optional[str] = None) -> AskResp
             groundedness_verified=False,
             session_id=effective_session_id,
             execution_status="BLOCKED_INPUT_INJECTION",
+            is_cached=False,
         )
+
+    # Step 2.5: Response Cache Lookup (Task 16)
+    cache = get_response_cache()
+    if not bypass_cache:
+        cached_entry = cache.get(clean_query)
+        if cached_entry:
+            cached_data = dict(cached_entry)
+            cached_data["session_id"] = effective_session_id
+            cached_data["query"] = query
+            cached_data["is_cached"] = True
+            return AskResponse(**cached_data)
 
     # Step 3: Multi-Agent Crew & Session Memory Processing
     structured_res = process_support_query(clean_query, session_id=effective_session_id)
@@ -194,7 +214,7 @@ def execute_guarded_ask(query: str, session_id: Optional[str] = None) -> AskResp
         if not is_grounded:
             execution_status = groundedness_audit.get("status", "INTERCEPTED_LOW_SIMILARITY")
 
-    return AskResponse(
+    response = AskResponse(
         query=query,
         clean_query=clean_query,
         answer=final_answer,
@@ -210,7 +230,14 @@ def execute_guarded_ask(query: str, session_id: Optional[str] = None) -> AskResp
         groundedness_verified=is_grounded,
         session_id=effective_session_id,
         execution_status=execution_status,
+        is_cached=False,
     )
+
+    # Cache safe successful responses
+    if not bypass_cache and execution_status == "COMPLETED_SAFE":
+        cache.set(clean_query, response.model_dump())
+
+    return response
 
 
 # ==============================================================================
@@ -250,17 +277,37 @@ def ask_endpoint(payload: AskRequest) -> AskResponse:
     """
     Candidate inquiry endpoint:
     - Applies Input PII Masking & Prompt Injection Detection
+    - Leverages Normalized Query Response Cache (Task 16)
     - Executes Multi-Agent Crew & LangChain Session Memory
     - Enforces Output Groundedness Verification (>= 0.4000 cutoff)
     """
     try:
-        return execute_guarded_ask(query=payload.query, session_id=payload.session_id)
+        return execute_guarded_ask(
+            query=payload.query,
+            session_id=payload.session_id,
+            bypass_cache=payload.bypass_cache,
+        )
     except Exception as exc:
         logger.error(f"Error handling /ask request: {exc}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Support pipeline execution failed: {str(exc)}",
         )
+
+
+@app.get("/cache/metrics")
+@app.get("/api/v1/cache/metrics")
+def get_cache_metrics():
+    """Returns real-time response cache metrics (hits, misses, hit rate, tokens saved)."""
+    return get_response_cache().get_metrics()
+
+
+@app.post("/cache/clear")
+@app.post("/api/v1/cache/clear")
+def clear_cache():
+    """Purges all entries from the response cache."""
+    get_response_cache().clear()
+    return {"status": "cleared", "message": "Response cache cleared successfully."}
 
 
 @app.post("/add-document", response_model=AddDocumentResponse)

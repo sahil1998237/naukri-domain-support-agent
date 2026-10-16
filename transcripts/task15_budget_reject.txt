@@ -1,7 +1,7 @@
 ================================================================================
   NAUKRI.COM DOMAIN SUPPORT AGENT - TASK 15 TOKEN BUDGET GOVERNANCE TRANSCRIPT
 ================================================================================
-Execution Timestamp:       2026-10-16T06:16:58.681378+00:00
+Execution Timestamp:       2026-10-16T06:30:42.173980+00:00
 Configured Budget Cap:      2000 tokens per request
 Governance Objective:       Prevent denial-of-wallet attacks and recursive agent runaway
 
