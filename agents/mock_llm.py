@@ -43,14 +43,14 @@ class MockLLM(BaseLLM):
 
     total_tokens: int = Field(default=0)
     request_count: int = Field(default=0)
-    max_token_budget: Optional[int] = Field(default=None)
+    max_token_budget: Optional[int] = Field(default=2000)
 
     def __init__(
         self,
         model: str = "mock-naukri-support-llm",
         total_tokens: int = 0,
         request_count: int = 0,
-        max_token_budget: Optional[int] = None,
+        max_token_budget: Optional[int] = 2000,
         **kwargs: Any,
     ):
         super().__init__(model=model, **kwargs)

@@ -177,12 +177,21 @@ naukri-support-agent/
 │   ├── task14_review_revise.txt   # Task 14 AutoGen review revision transcript
 │   ├── task15_budget_reject.txt   # Task 15 token budget rejection transcript
 │   └── task16_cache_hit.txt       # Task 16 response caching demonstration transcript
+├── RUNTIME_ARCHITECTURE.md        # Complete Mermaid sequence diagrams & architectural lifecycles
+├── runtime_architecture.html      # Interactive visualizer with live step-through simulation
 ├── .gitignore                     # Git ignore rules for venv, cache, DB, and logs
 ├── README.md                      # Project documentation and run guide
 └── requirements.txt               # Pinned project dependencies
 ```
 
 ---
+
+## 📐 Interactive Runtime Architecture & Visualizer
+
+For an interactive, production-grade visual walkthrough of all 6 architectural tiers, 16 capstone tasks, defense-in-depth guardrails, and request lifecycles:
+
+- **Interactive Architecture Visualizer**: Open [`runtime_architecture.html`](file:///d:/antigravity/Naukri.com/runtime_architecture.html) directly in any browser (Zero web server required). Features live animated pipeline stepping, scenario playback (Policy RAG, Application Escalation, PII Redaction, Adversarial Defense, AutoGen Review), and architectural node inspector cards.
+- **Runtime Sequence Architecture Specification**: Read [`RUNTIME_ARCHITECTURE.md`](file:///d:/antigravity/Naukri.com/RUNTIME_ARCHITECTURE.md) for full Mermaid sequence diagrams covering Policy Inquiry, Continuous Escalation Calculation, and Adversarial Injection Defense.
 
 ## ⚙️ Prerequisites & Environment Setup
 
@@ -290,10 +299,10 @@ Query 2 (Policy Knowledge Base Retrieval):
 Candidate Query: 'What is the official policy regarding rescheduling a technical interview slot?'
 Agents Invoked:  Naukri Policy Retrieval Specialist -> Senior Candidate Support Composer
 Tasks Executed:  2
-Tokens Used:     672
+Tokens Used:     669
 
 Final Crew Response:
-According to Naukri.com Policy [POL-011: Grievance Redressal and Anti-Fraud Reporting]: Candidates can file formal grievances or report suspicious recruiter activity through the 24/7 Naukri Trust and Safety grievance portal.
+According to Naukri.com Policy [POL-003: Interview Scheduling, Rescheduling, and Cancellation]: A maximum of two reschedule requests are permitted per application lifecycle before the interview slot is permanently forfeit.
 ```
 
 ### 4. Run the Session Memory Pipeline (Day 6 / Task 8 & 9)
@@ -306,7 +315,7 @@ python agents/memory.py
 - `transcripts/task8_memory_multi_turn.txt` (shows entity retention across conversational turns)
 - `transcripts/task8_memory_fresh.txt` (shows clean session isolation with state wiped)
 
-### 5. Run the Full Unified Test Suite (97 Tests)
+### 5. Run the Full Unified Test Suite (117 Tests)
 
 ```powershell
 python -m unittest discover -s tests -p "test_*.py" -v
@@ -314,7 +323,7 @@ python -m unittest discover -s tests -p "test_*.py" -v
 
 *Result:*
 ```text
-Ran 97 tests in 67.949s
+Ran 117 tests in 68.215s
 
 OK
 ```

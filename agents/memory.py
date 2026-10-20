@@ -15,6 +15,7 @@ import os
 from pathlib import Path
 import re
 import sys
+import threading
 from typing import Any, Dict, List, Optional, Tuple
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -37,74 +38,83 @@ from rag.retriever import generate_grounded_response
 class SessionMemoryManager:
     """
     Manages session-isolated in-memory conversation histories using LangChain
-    InMemoryChatMessageHistory.
+    InMemoryChatMessageHistory. Thread-safe across concurrent API invocations.
     """
 
     def __init__(self) -> None:
         self._sessions: Dict[str, InMemoryChatMessageHistory] = {}
         self._session_metadata: Dict[str, Dict[str, Any]] = {}
+        self._lock = threading.RLock()
 
     def get_history(self, session_id: str) -> InMemoryChatMessageHistory:
         """Retrieve or initialize the message history for a given session."""
-        if session_id not in self._sessions:
-            self._sessions[session_id] = InMemoryChatMessageHistory()
-            self._session_metadata[session_id] = {
-                "created_at": datetime.now(timezone.utc).isoformat(),
-                "active_record_id": None,
-                "active_category": None,
-            }
-        return self._sessions[session_id]
+        with self._lock:
+            if session_id not in self._sessions:
+                self._sessions[session_id] = InMemoryChatMessageHistory()
+                self._session_metadata[session_id] = {
+                    "created_at": datetime.now(timezone.utc).isoformat(),
+                    "active_record_id": None,
+                    "active_category": None,
+                }
+            return self._sessions[session_id]
 
     def add_user_message(self, session_id: str, content: str) -> None:
         """Add a candidate message to the specified session history."""
-        history = self.get_history(session_id)
-        history.add_user_message(content)
+        with self._lock:
+            history = self.get_history(session_id)
+            history.add_user_message(content)
 
-        # Detect and store active application ID in session metadata
-        match = re.search(r"\bAPP-\d{3}\b", content, re.IGNORECASE)
-        if match:
-            self._session_metadata[session_id]["active_record_id"] = match.group(0).upper()
+            # Detect and store active application ID in session metadata
+            match = re.search(r"\bAPP-\d{3}\b", content, re.IGNORECASE)
+            if match:
+                self._session_metadata[session_id]["active_record_id"] = match.group(0).upper()
 
     def add_ai_message(self, session_id: str, content: str) -> None:
         """Add an assistant response to the specified session history."""
-        history = self.get_history(session_id)
-        history.add_ai_message(content)
+        with self._lock:
+            history = self.get_history(session_id)
+            history.add_ai_message(content)
 
     def get_active_record_id(self, session_id: str) -> Optional[str]:
         """Return the active application ID associated with this session, if any."""
-        return self._session_metadata.get(session_id, {}).get("active_record_id")
+        with self._lock:
+            return self._session_metadata.get(session_id, {}).get("active_record_id")
 
     def set_active_record_id(self, session_id: str, record_id: str) -> None:
         """Explicitly set or update the active application ID for a session."""
-        self.get_history(session_id)
-        self._session_metadata[session_id]["active_record_id"] = record_id.upper()
+        with self._lock:
+            self.get_history(session_id)
+            self._session_metadata[session_id]["active_record_id"] = record_id.upper()
 
     def get_context_summary(self, session_id: str, max_messages: int = 6) -> str:
         """Format recent conversation turns into a context string."""
-        if session_id not in self._sessions:
-            return "No previous conversation history in this session."
+        with self._lock:
+            if session_id not in self._sessions:
+                return "No previous conversation history in this session."
 
-        messages = self._sessions[session_id].messages[-max_messages:]
-        if not messages:
-            return "No previous conversation history in this session."
+            messages = self._sessions[session_id].messages[-max_messages:]
+            if not messages:
+                return "No previous conversation history in this session."
 
-        lines = []
-        for msg in messages:
-            sender = "Candidate" if isinstance(msg, HumanMessage) else "Support Agent"
-            lines.append(f"{sender}: {msg.content}")
-        return "\n".join(lines)
+            lines = []
+            for msg in messages:
+                sender = "Candidate" if isinstance(msg, HumanMessage) else "Support Agent"
+                lines.append(f"{sender}: {msg.content}")
+            return "\n".join(lines)
 
     def clear_session(self, session_id: str) -> None:
         """Reset and completely wipe conversation history and metadata for a session."""
-        if session_id in self._sessions:
-            self._sessions[session_id].clear()
-            del self._sessions[session_id]
-        if session_id in self._session_metadata:
-            del self._session_metadata[session_id]
+        with self._lock:
+            if session_id in self._sessions:
+                self._sessions[session_id].clear()
+                del self._sessions[session_id]
+            if session_id in self._session_metadata:
+                del self._session_metadata[session_id]
 
     def has_session(self, session_id: str) -> bool:
         """Return True if session exists and contains messages."""
-        return session_id in self._sessions and len(self._sessions[session_id].messages) > 0
+        with self._lock:
+            return session_id in self._sessions and len(self._sessions[session_id].messages) > 0
 
 
 # Global shared session memory manager

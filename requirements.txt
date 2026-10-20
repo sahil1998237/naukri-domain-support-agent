@@ -25,5 +25,5 @@ autogen-agentchat>=0.7.0
 autogen-ext>=0.7.0
 googleapis-common-protos<1.64
 
-
-
+# --- Testing & Quality Assurance ---
+pytest>=8.0.0

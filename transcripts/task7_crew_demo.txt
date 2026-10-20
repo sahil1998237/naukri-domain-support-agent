@@ -20,10 +20,10 @@ Query 2 (Policy Knowledge Base Retrieval):
 Candidate Query: 'What is the official policy regarding rescheduling a technical interview slot?'
 Agents Invoked:  Naukri Policy Retrieval Specialist -> Senior Candidate Support Composer
 Tasks Executed:  2
-Tokens Used:     672
+Tokens Used:     669
 
 Final Crew Response:
-According to Naukri.com Policy [POL-011: Grievance Redressal and Anti-Fraud Reporting]: Candidates can file formal grievances or report suspicious recruiter activity through the 24/7 Naukri Trust and Safety grievance portal.
+According to Naukri.com Policy [POL-003: Interview Scheduling, Rescheduling, and Cancellation]: A maximum of two reschedule requests are permitted per application lifecycle before the interview slot is permanently forfeit.
 
 --------------------------------------------------------------------------------
 Query 3 (Normal Status Lookup - No Escalation):

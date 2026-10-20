@@ -1027,8 +1027,8 @@
         desc: 'Seeded candidate application database containing >=40 records across 5 categories and 5 status stages. Evaluates application escalation using a continuous formula.',
         inputs: ['Record ID (e.g. APP-042)'],
         outputs: ['Application details and continuous escalation score [0.0 - 1.0]'],
-        security: 'Formula: escalation_score = 0.6 * flagged_priority + 0.4 * (days_since_created / 30). Threshold: 0.5000.',
-        code: `def check_job_application_status(record_id: str) -> dict:\n    rec = DB.get(record_id)\n    score = 0.6 * int(rec.flagged) + 0.4 * min(1.0, rec.days / 30.0)\n    return {\n        "record_id": record_id,\n        "escalation_score": round(score, 4),\n        "escalation_recommended": score >= 0.5000\n    }`
+        security: 'Formula: escalation_score = 0.5 * flagged_priority + 0.5 * min(1.0, days_since_created / 30). 80th-percentile threshold: 0.5667.',
+        code: `def check_job_application_status(record_id: str) -> dict:\n    rec = DB.get(record_id)\n    score = 0.5 * int(rec.flagged) + 0.5 * min(1.0, rec.days / 30.0)\n    return {\n        "record_id": record_id,\n        "escalation_score": round(score, 4),\n        "escalation_recommended": score >= 0.5667\n    }`
       },
       'autogen-reviewer': {
         title: 'Policy Compliance Reviewer (AutoGen)',
@@ -1100,7 +1100,7 @@
           "Session Memory assigns session identifier",
           "CrewAI orchestrator delegates query to Lookup Agent ONLY",
           "Lookup Agent queries Seeded Applications DB: Record found (Days: 22, Flagged: True)",
-          "Escalation formula computed: 0.6*1 + 0.4*(22/30) = 0.8933 >= 0.5000 (ESCALATE)",
+          "Escalation formula computed: 0.5*1 + 0.5*(22/30) = 0.8667 >= 0.5667 (ESCALATE)",
           "Composer Agent formats formal escalation update report",
           "Gateway delivers HTTP 200 AskResponse with escalation_needed=True"
         ]

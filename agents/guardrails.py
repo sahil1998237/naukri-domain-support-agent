@@ -32,7 +32,7 @@ GROUNDEDNESS_THRESHOLD = CALIBRATED_SIMILARITY_THRESHOLD  # 0.4000
 # - Various delimiters between digits: spaces, dashes, dots, or 5-5 grouping
 INDIAN_PHONE_REGEX = re.compile(
     r"""
-    (?:\+91[\s\-\.]?|\b91[\s\-\.]?|\b0[\s\-\.]?|\b)  # Optional country code (+91, 91, or 0) or word boundary
+    (?:\+91[\s\-\.]?|\b91[\s\-\.]?|\b0[\s\-\.]?|\(\+91\)[\s\-\.]?|\(0\)[\s\-\.]?|\b)  # Optional country code (+91, 91, 0, (+91), (0)) or word boundary
     [6-9]                                             # First mobile digit (6-9)
     (?:[\s\-\.]?\d){9}                                # Exactly 9 more digits with optional delimiters
     \b

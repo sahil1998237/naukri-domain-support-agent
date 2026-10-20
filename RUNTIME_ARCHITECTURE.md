@@ -191,8 +191,8 @@ sequenceDiagram
     Note over LookAgent,AppDB: Least-Autonomy: Only Lookup Agent has DB tool
     LookAgent->>AppDB: Query record APP-042
     AppDB-->>LookAgent: Found (Status: In Review, Days: 22, Flagged: True)
-    LookAgent->>LookAgent: Compute Escalation Score: 0.6*1 + 0.4*(22/30) = 0.8933
-    Note over LookAgent: 0.8933 >= 0.5000 -> ESCALATION RECOMMENDED
+    LookAgent->>LookAgent: Compute Escalation Score: 0.5*1 + 0.5*(22/30) = 0.8667
+    Note over LookAgent: 0.8667 >= 0.5667 -> ESCALATION RECOMMENDED
     LookAgent-->>Crew: Status summary + Escalation recommendation
     Crew->>Composer: Synthesize formal status report
     Composer-->>GW: AgentResponse(escalation_needed=True, confidence=1.0)
