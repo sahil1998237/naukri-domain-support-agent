@@ -194,7 +194,7 @@ def run_naukri_support_crew(
         "policy", "reschedule", "interview", "cooling", "salary",
         "offer", "bgv", "notice", "buyout", "screening", "grievance", "privacy"
     ]
-    is_policy_query = any(k in query.lower() for k in policy_keywords)
+    is_policy_query = (not record_id) or any(k in query.lower() for k in policy_keywords)
 
     agents: List[Agent] = []
     tasks: List[Task] = []

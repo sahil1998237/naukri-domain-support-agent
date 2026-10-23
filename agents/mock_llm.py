@@ -4,16 +4,27 @@ Deterministic MockLLM for Naukri.com Multi-Agent Crew (Day 4 / Task 7 setup).
 Extends crewai.llms.base_llm.BaseLLM to allow the entire capstone system
 to execute 100% locally with zero external API keys and zero cost.
 
-Architectural Safeguards Implemented:
-1. ReAct Parser Trap Avoidance: Inspects actual message history without confusing
-   system prompt template instructions ('Observation: ...') with real execution output.
-2. Argument-Schema-Based Tool Dispatch: Routes tools based on argument signatures rather
-   than ambiguous name substrings (e.g., distinguishing 'APP-XXX' from policy questions).
-3. Telemetry Protection: Disables CrewAI telemetry on module import.
-4. Token Counter: Tracks per-request and cumulative token usage for governance budget control.
+ARCHITECTURAL CONSTRAINT (Least Autonomy Compliance):
+This LLM does NOT import or directly invoke any tool backend functions
+(check_job_application_status, generate_grounded_response, etc.).
+It operates purely through CrewAI's ReAct execution loop:
+1. Specialist agents (Turn 1): Emits Action + Action Input for CrewAI to execute.
+2. Specialist agents (Turn 2): Reads the Observation text placed by CrewAI after
+   tool execution and synthesizes a Final Answer from it — no backdoor tool calls.
+3. Composer agent (zero tools): Reads the upstream context block forwarded by
+   CrewAI from specialist agents and synthesizes a Final Answer purely from text.
+
+Safeguards Implemented:
+1. ReAct Parser Trap Avoidance: Distinguishes CrewAI's instructional template
+   text ("Observation: the result of the action") from actual tool output by
+   only parsing the execution history section after "Begin!".
+2. Schema-Based Tool Dispatch: Routes Action requests based on agent role and
+   query intent (APP-XXX pattern vs policy keywords).
+3. Telemetry Protection: CREWAI_DISABLE_TELEMETRY=true enforced on import.
+4. Token Budget Governance: Tracks per-request and cumulative token usage,
+   raising TokenBudgetExceededError if the ceiling is exceeded.
 """
 
-import json
 import os
 from pathlib import Path
 import re
@@ -30,8 +41,9 @@ if str(PROJECT_ROOT) not in sys.path:
 from crewai.llms.base_llm import BaseLLM
 from pydantic import BaseModel, Field
 
-from agents.tools import check_job_application_status
-from rag.retriever import generate_grounded_response
+# NOTE: This module intentionally does NOT import check_job_application_status
+# or generate_grounded_response. All tool execution flows exclusively through
+# CrewAI's Action -> Tool Executor -> Observation loop.
 
 
 class MockLLM(BaseLLM):
@@ -39,6 +51,10 @@ class MockLLM(BaseLLM):
     Deterministic rule-based LLM extending CrewAI's BaseLLM interface.
     Operates without API keys while supporting CrewAI's ReAct execution loop,
     structured tool calls, and Pydantic schema validation.
+
+    This LLM contains ZERO imports of tool backend functions. All tool execution
+    flows exclusively through CrewAI's Action -> Observation loop, ensuring that
+    the Least-Autonomy agent architecture is not violated at the LLM layer.
     """
 
     total_tokens: int = Field(default=0)
@@ -91,6 +107,114 @@ class MockLLM(BaseLLM):
         words = len(text.split())
         return max(1, int(words * 1.3))
 
+    # ------------------------------------------------------------------
+    # Observation Parsing — Trap 1 Safeguard
+    # ------------------------------------------------------------------
+
+    def _parse_real_observation(self, prompt: str) -> tuple:
+        """
+        Parse the prompt for real tool observations, distinguishing them from
+        CrewAI's instructional template text.
+
+        CrewAI injects a format block into every specialist agent prompt:
+            ```
+            Action: the action to take, only one name of [tool_name]...
+            Action Input: ...
+            Observation: the result of the action
+            ```
+        These are INSTRUCTIONS, not real tool output. Real observations appear
+        after "Begin!" in the execution history section when CrewAI appends
+        actual tool output following an agent's emitted Action.
+
+        Returns:
+            (has_real_observation: bool, observation_content: str)
+        """
+        # Isolate the execution history section (after "Begin!")
+        begin_idx = prompt.rfind("Begin!")
+        if begin_idx != -1:
+            exec_section = prompt[begin_idx:]
+        else:
+            # Direct test call without CrewAI wrapper — use full prompt
+            exec_section = prompt
+
+        # Find Action: lines with an actual tool name (single identifier, not
+        # template text like "the action to take, only one name of ...")
+        action_pattern = re.compile(r"^Action:\s*(\w+)\s*$", re.MULTILINE)
+        action_matches = list(action_pattern.finditer(exec_section))
+
+        if not action_matches:
+            return False, ""
+
+        # Look for an Observation after the last real Action
+        last_action = action_matches[-1]
+        after_action = exec_section[last_action.end():]
+
+        obs_match = re.search(
+            r"Observation:\s*(.+?)(?=\nThought:|\Z)",
+            after_action,
+            re.DOTALL,
+        )
+
+        if not obs_match:
+            return False, ""
+
+        obs_content = obs_match.group(1).strip()
+
+        # Filter out template placeholder text
+        if obs_content.lower().startswith("the result of the action"):
+            return False, ""
+
+        # Must have substantive content (real tool output is always > 10 chars)
+        if len(obs_content) < 10:
+            return False, ""
+
+        return True, obs_content
+
+    # ------------------------------------------------------------------
+    # Context Extraction (for Composer Agent)
+    # ------------------------------------------------------------------
+
+    def _extract_context_block(self, prompt: str) -> str:
+        """
+        Extract the context block that CrewAI forwards from upstream agents.
+
+        CrewAI sequential process provides context as:
+            This is the context you're working with:
+            <accumulated output from previous specialist tasks>
+        """
+        ctx_match = re.search(
+            r"This is the context you're working with:\s*\n(.+?)(?:\n\nProvide|\Z)",
+            prompt,
+            re.DOTALL,
+        )
+        if ctx_match:
+            return ctx_match.group(1).strip()
+        return ""
+
+    # ------------------------------------------------------------------
+    # Query Extraction
+    # ------------------------------------------------------------------
+
+    def _extract_query(self, prompt: str, task_desc: str = "") -> str:
+        """Extract the candidate's original query from the prompt."""
+        combined = prompt + " " + task_desc
+        q_match = re.search(
+            r"(?:candidate query|inquiry|query):\s*['\"](.+?)['\"]",
+            combined,
+            re.IGNORECASE,
+        )
+        if q_match:
+            return q_match.group(1).strip()
+        # Fallback: task description
+        task_match = re.search(r"Current Task:\s*(.+?)(?:\n|$)", prompt)
+        if task_match:
+            return task_match.group(1).strip()
+        return prompt.split("\n")[-1].replace("Thought:", "").strip()
+
+    # ------------------------------------------------------------------
+    # Main Generation Entry Point
+    # ------------------------------------------------------------------
+
     def call(
         self,
         messages: Union[str, List[Any]],
@@ -103,12 +227,13 @@ class MockLLM(BaseLLM):
         **kwargs: Any,
     ) -> Union[str, Any]:
         """
-        Execute deterministic mock generation.
+        Execute deterministic mock generation through CrewAI's ReAct loop.
 
-        Handles:
-        1. Tool invocation generation (Action & Action Input).
-        2. Final Answer generation after tool observation.
-        3. Pydantic structured output validation.
+        Flow:
+        PATH A: Composer agent (zero tools) → synthesize from upstream context only.
+        PATH B: Specialist agent Turn 2 (observation present) → synthesize from observation.
+        PATH C: Specialist agent Turn 1 (no observation) → emit Action + Action Input.
+        PATH D: Out-of-scope query → emit Final Answer with safe fallback.
         """
         self.request_count += 1
         prompt = self._extract_prompt_text(messages)
@@ -122,159 +247,146 @@ class MockLLM(BaseLLM):
                 budget_limit=self.max_token_budget,
             )
 
-        # -------------------------------------------------------------
-        # Trap 1 Safeguard: Parse only actual execution history
-        # Do not mistake system prompt template 'Observation: result' for a real tool result.
-        # A real tool execution occurs when 'Observation:' is followed by tool output
-        # AFTER the Action was invoked.
-        # -------------------------------------------------------------
-        has_real_observation = False
-        last_observation_content = ""
+        # Determine agent role and task description
+        agent_role = getattr(from_agent, "role", "") if from_agent else ""
+        task_desc = getattr(from_task, "description", "") if from_task else ""
 
-        # Check if there is an Action followed by an Observation in the conversation
-        action_match = re.search(r"Action:\s*(\w+)", prompt, re.IGNORECASE)
-        obs_match = re.search(r"Observation:\s*(.+?)(?:\nThought:|\Z)", prompt, re.DOTALL | re.IGNORECASE)
-
-        if action_match and obs_match:
-            obs_start = obs_match.start()
-            action_start = action_match.start()
-            if obs_start > action_start:
-                has_real_observation = True
-                last_observation_content = obs_match.group(1).strip()
-
-        # Check for record ID pattern (e.g. APP-001)
-        record_id_match = re.search(r"\bAPP-\d{3}\b", prompt, re.IGNORECASE)
-        record_id = record_id_match.group(0).upper() if record_id_match else None
-
-        # Check if the calling agent is the Composer or an agent with no tools
+        # Detect if this is the Composer agent (zero-tool synthesis agent)
         is_composer = (
-            (from_agent is not None and hasattr(from_agent, "role") and "Composer" in from_agent.role)
-            or ("Composer" in prompt)
-            or (from_agent is not None and tools is not None and len(tools) == 0)
+            "Composer" in agent_role
+            or (
+                from_agent is not None
+                and hasattr(from_agent, "tools")
+                and len(getattr(from_agent, "tools", []) or []) == 0
+                and "Composer" in prompt
+            )
         )
 
-        # Extract clean candidate query from prompt or task description
-        task_desc = getattr(from_task, "description", "") if from_task else ""
-        q_match = re.search(r"(?:candidate query|inquiry|query):\s*['\"](.+?)['\"]", prompt + " " + task_desc, re.IGNORECASE)
-        search_query = q_match.group(1).strip() if q_match else prompt.split("\n")[-1].replace("Question:", "").replace("User:", "").strip()
-        search_query = re.sub(r"\(Context:.*?\)", "", search_query).strip()
+        # Parse real observation (not template text)
+        has_real_observation, observation_text = self._parse_real_observation(prompt)
 
-        # Policy keywords check against candidate query text (not the tool descriptions in system prompt)
-        policy_keywords = ["policy", "reschedule", "interview", "cooling", "salary", "offer", "bgv", "notice", "buyout", "screening", "grievance", "privacy"]
-        is_policy_query = any(k in search_query.lower() for k in policy_keywords)
+        # Extract clean query and detect policy intent
+        search_query = self._extract_query(prompt, task_desc)
 
-        # -------------------------------------------------------------
-        # Case A: Tool has already executed and returned an Observation,
-        # OR the agent is a Composer with no tools (synthesis mode).
-        # -------------------------------------------------------------
-        if has_real_observation or is_composer:
-            # Subcase A1: Composite inquiry (Policy inquiry relating to an application)
-            if is_policy_query and record_id:
-                policy_res = generate_grounded_response(search_query)
-                status_data = check_job_application_status(record_id)
-                status_prefix = (
-                    f"Application {record_id} ({status_data.get('category', 'Role')}) is currently in '{status_data.get('status', 'Active')}' status."
-                    if status_data["found"]
-                    else f"Regarding application {record_id}:"
-                )
-                if policy_res["is_grounded"]:
-                    policy_part = policy_res["answer"]
-                else:
-                    policy_part = (
-                        "According to Naukri.com Policy [POL-003: Interview Scheduling, Rescheduling, and Cancellation]: "
-                        "Candidates may request a reschedule for technical or managerial interviews up to 24 hours prior to the scheduled slot via the Naukri candidate portal. "
-                        "A maximum of two reschedule requests are permitted per application lifecycle before the interview slot is forfeit."
-                    )
+        # Extract record ID with strict precedence to avoid matching examples in tool docstrings (e.g. 'APP-001')
+        record_id = None
+        if task_desc:
+            m = re.search(r"\bAPP-\d{3}\b", task_desc, re.IGNORECASE)
+            if m:
+                record_id = m.group(0).upper()
+        if not record_id and search_query:
+            m = re.search(r"\bAPP-\d{3}\b", search_query, re.IGNORECASE)
+            if m:
+                record_id = m.group(0).upper()
+        if not record_id:
+            task_section = re.search(r"Current Task:\s*(.+)", prompt, re.DOTALL)
+            if task_section:
+                m = re.search(r"\bAPP-\d{3}\b", task_section.group(1), re.IGNORECASE)
+                if m:
+                    record_id = m.group(0).upper()
+        if not record_id:
+            # Fallback: take the LAST occurrence in prompt (past any tool descriptions)
+            all_matches = list(re.finditer(r"\bAPP-\d{3}\b", prompt, re.IGNORECASE))
+            if all_matches:
+                record_id = all_matches[-1].group(0).upper()
+        policy_keywords = [
+            "policy", "reschedule", "interview", "cooling", "salary",
+            "offer", "bgv", "notice", "buyout", "screening", "grievance", "privacy",
+        ]
+        is_policy_query = (not record_id) or any(k in search_query.lower() for k in policy_keywords)
+
+        # -----------------------------------------------------------------
+        # PATH A: Composer Agent (Zero Tools)
+        # Synthesize purely from the upstream context block forwarded by CrewAI.
+        # The Composer NEVER executes tools — it reads specialist findings only.
+        # -----------------------------------------------------------------
+        if is_composer:
+            context = self._extract_context_block(prompt)
+            if context:
                 final_text = (
-                    f"Thought: I will provide the official policy answer in the context of application {record_id}.\n"
-                    f"Final Answer: {status_prefix} {policy_part}"
+                    f"Thought: I have reviewed the findings from the specialist agents.\n"
+                    f"Final Answer: {context}"
                 )
-            elif record_id:
-                status_data = check_job_application_status(record_id)
-                if status_data["found"]:
-                    esc_str = "ESCALATION RECOMMENDED" if status_data["escalation_recommended"] else "Normal Priority"
-                    final_text = (
-                        f"Thought: I have reviewed the application status.\n"
-                        f"Final Answer: Application {status_data['record_id']} ({status_data['category']}) "
-                        f"is in '{status_data['status']}' status (created {status_data['days_since_created']} days ago). "
-                        f"Escalation score is {status_data['escalation_score']} ({esc_str}). "
-                        f"Rationale: {status_data['rationale']}."
-                    )
-                else:
-                    final_text = (
-                        f"Thought: The record ID was not found.\n"
-                        f"Final Answer: {status_data['error']}"
-                    )
+            elif has_real_observation:
+                # Fallback for edge cases where context is embedded as observation
+                final_text = (
+                    f"Thought: I have reviewed the specialist findings.\n"
+                    f"Final Answer: {observation_text}"
+                )
             else:
-                # If we have an observation from the retrieval agent, use it
-                if last_observation_content and "Citation:" in last_observation_content:
-                    final_text = (
-                        f"Thought: I have reviewed the retrieved policy documentation.\n"
-                        f"Final Answer: {last_observation_content}"
-                    )
-                else:
-                    # Look up grounded policy response directly using clean query
-                    policy_res = generate_grounded_response(search_query)
-                    final_text = (
-                        f"Thought: I will provide the official policy answer.\n"
-                        f"Final Answer: {policy_res['answer']}"
-                    )
-
+                final_text = (
+                    "Thought: No specialist findings were provided.\n"
+                    "Final Answer: I do not have sufficient information to answer "
+                    "this question. Please contact the Naukri Help Desk or an HR "
+                    "representative for assistance."
+                )
             tokens_out = self._estimate_tokens(final_text)
             self.total_tokens += tokens_in + tokens_out
             return final_text
 
-        # -------------------------------------------------------------
-        # Case B: Initial Tool Dispatch (Trap 2 Safeguard)
-        # Dispatch by schema/intent or specific agent role assignment.
-        # -------------------------------------------------------------
-        agent_role = getattr(from_agent, "role", "") if from_agent else ""
+        # -----------------------------------------------------------------
+        # PATH B: Specialist Agent Turn 2 — Observation Already Received
+        # CrewAI executed the tool and placed the output as an Observation.
+        # Synthesize Final Answer from the observation text ONLY.
+        # -----------------------------------------------------------------
+        if has_real_observation:
+            answer_text = self._synthesize_from_observation(observation_text)
+            final_text = (
+                f"Thought: I have reviewed the tool observation and gathered the required information.\n"
+                f"Final Answer: {answer_text}"
+            )
+            tokens_out = self._estimate_tokens(final_text)
+            self.total_tokens += tokens_in + tokens_out
+            return final_text
 
-        # If from Retrieval Agent OR pure policy query
-        if "Retrieval" in agent_role or (is_policy_query and not record_id):
-            task_desc = getattr(from_task, "description", "") if from_task else ""
-            q_match = re.search(r"(?:query|inquiry):\s*['\"](.+?)['\"]", prompt + " " + task_desc, re.IGNORECASE)
-            if q_match:
-                clean_q = q_match.group(1).strip()
-            else:
-                clean_q = "What is the policy for rescheduling an interview?"
+        # -----------------------------------------------------------------
+        # PATH C: Specialist Agent Turn 1 — Emit Action + Action Input
+        # This is the first call for a specialist agent. Emit the appropriate
+        # tool invocation for CrewAI to execute.
+        # -----------------------------------------------------------------
 
+        # Retrieval Agent or policy query without record ID
+        if "Retrieval" in agent_role or "Policy" in agent_role or (is_policy_query and not record_id):
+            clean_q = search_query if search_query else "What is the policy for rescheduling an interview?"
+            # Remove any surrounding quotes from extracted query
+            clean_q = clean_q.strip("'\"")
             action_text = (
                 f"Thought: The candidate has a policy question. I need to search the knowledge base.\n"
                 f"Action: retrieve_policy_context\n"
-                f"Action Input: {{\"query\": \"{clean_q}\"}}"
+                f'Action Input: {{"query": "{clean_q}"}}'
             )
             tokens_out = self._estimate_tokens(action_text)
             self.total_tokens += tokens_in + tokens_out
             return action_text
 
-        # If from Lookup Agent OR application record ID present
-        if "Lookup" in agent_role or record_id:
+        # Lookup Agent or application record ID present
+        if "Lookup" in agent_role or "Status" in agent_role or "Escalation" in agent_role or record_id:
             target_id = record_id or "APP-001"
             action_text = (
                 f"Thought: The candidate is inquiring about job application {target_id}. "
                 f"I must look up the application details and calculate the escalation score.\n"
                 f"Action: check_job_application_status\n"
-                f"Action Input: {{\"record_id\": \"{target_id}\"}}"
+                f'Action Input: {{"record_id": "{target_id}"}}'
             )
             tokens_out = self._estimate_tokens(action_text)
             self.total_tokens += tokens_in + tokens_out
             return action_text
 
+        # Policy query fallback (agent role not detected but keywords present)
         if is_policy_query:
-            clean_q = prompt.split("\n")[-1].replace("Question:", "").replace("User:", "").strip()
+            clean_q = search_query or "What is the relevant policy?"
             action_text = (
                 f"Thought: The candidate has a policy question. I need to search the knowledge base.\n"
                 f"Action: retrieve_policy_context\n"
-                f"Action Input: {{\"query\": \"{clean_q}\"}}"
+                f'Action Input: {{"query": "{clean_q}"}}'
             )
             tokens_out = self._estimate_tokens(action_text)
             self.total_tokens += tokens_in + tokens_out
             return action_text
 
-        # -------------------------------------------------------------
-        # Case C: Out-of-Scope or General Synthesis (No tools required)
-        # -------------------------------------------------------------
+        # -----------------------------------------------------------------
+        # PATH D: Out-of-Scope or General (No tools required)
+        # -----------------------------------------------------------------
         final_text = (
             "Thought: This inquiry does not match any internal application record or policy document.\n"
             "Final Answer: I do not have sufficient policy information in the knowledge base to answer this question. "
@@ -283,6 +395,100 @@ class MockLLM(BaseLLM):
         tokens_out = self._estimate_tokens(final_text)
         self.total_tokens += tokens_in + tokens_out
         return final_text
+
+    # ------------------------------------------------------------------
+    # Observation Synthesis (Pure Text Parsing — No Tool Imports)
+    # ------------------------------------------------------------------
+
+    def _synthesize_from_observation(self, observation_text: str) -> str:
+        """
+        Compose a Final Answer by reading the observation text that CrewAI placed
+        into the prompt after executing a tool. This method does NOT call any
+        backend functions — it parses the text output only.
+
+        Handles two observation formats:
+        1. Application Status (from check_job_application_status_tool):
+           Contains "Record ID:", "Summary:", "Escalation Score:", etc.
+        2. Policy Retrieval (from retrieve_policy_context_tool):
+           Contains "[Verified Knowledge Base Citation: ...]", "Policy Text:", etc.
+        3. Error / Not Found results.
+        """
+        # --- Application Status Observations ---
+        # The tool returns structured fields with a Summary line at the end.
+        summary_match = re.search(r"Summary:\s*(.+)", observation_text)
+        if summary_match:
+            summary = summary_match.group(1).strip()
+            # Extract escalation verdict from the observation
+            if "ESCALATION RECOMMENDED" in observation_text:
+                esc_match = re.search(r"Escalation Score:\s*([\d.]+)", observation_text)
+                score = esc_match.group(1) if esc_match else ""
+                record_match = re.search(r"Record ID:\s*(\S+)", observation_text)
+                rid = record_match.group(1) if record_match else ""
+                role_match = re.search(r"Role:\s*(.+?)$", observation_text, re.MULTILINE)
+                role = role_match.group(1).strip() if role_match else ""
+                status_match = re.search(r"Status:\s*(.+?)$", observation_text, re.MULTILINE)
+                status = status_match.group(1).strip() if status_match else ""
+                days_match = re.search(r"Days Active:\s*(\d+)", observation_text)
+                days = days_match.group(1) if days_match else ""
+
+                return (
+                    f"Application {rid} ({role}) is in '{status}' status "
+                    f"(created {days} days ago). Escalation score is {score} "
+                    f"(ESCALATION RECOMMENDED). "
+                    f"Rationale: {self._extract_rationale(summary)}."
+                )
+            else:
+                # Normal priority — extract key fields from summary
+                record_match = re.search(r"Record ID:\s*(\S+)", observation_text)
+                rid = record_match.group(1) if record_match else ""
+                role_match = re.search(r"Role:\s*(.+?)$", observation_text, re.MULTILINE)
+                role = role_match.group(1).strip() if role_match else ""
+                status_match = re.search(r"Status:\s*(.+?)$", observation_text, re.MULTILINE)
+                status = status_match.group(1).strip() if status_match else ""
+                days_match = re.search(r"Days Active:\s*(\d+)", observation_text)
+                days = days_match.group(1) if days_match else ""
+                esc_match = re.search(r"Escalation Score:\s*([\d.]+)", observation_text)
+                score = esc_match.group(1) if esc_match else ""
+
+                return (
+                    f"Application {rid} ({role}) is in '{status}' status "
+                    f"(created {days} days ago). Escalation score is {score} "
+                    f"(Normal Priority). "
+                    f"Rationale: {self._extract_rationale(summary)}."
+                )
+
+        # --- Policy Retrieval Observations ---
+        cite_match = re.search(
+            r"\[Verified Knowledge Base Citation:\s*(.+?)\]",
+            observation_text,
+        )
+        policy_match = re.search(
+            r"Policy Text:\s*(.+?)(?:\nSimilarity|\Z)",
+            observation_text,
+            re.DOTALL,
+        )
+
+        if cite_match and policy_match:
+            citation = cite_match.group(1).strip()
+            policy_text = policy_match.group(1).strip()
+            return f"According to Naukri.com Policy [{citation}]: {policy_text}"
+
+        # --- Error / Not Found ---
+        if "No matching verified policy found" in observation_text:
+            return observation_text
+
+        if "Lookup Failed" in observation_text:
+            return observation_text
+
+        # --- Generic Fallback: Pass observation text through ---
+        return observation_text
+
+    def _extract_rationale(self, summary: str) -> str:
+        """Extract the Rationale portion from a tool summary string."""
+        rat_match = re.search(r"Rationale:\s*(.+?)\.?\s*$", summary)
+        if rat_match:
+            return rat_match.group(1).strip().rstrip(".")
+        return "See application details above"
 
 
 if __name__ == "__main__":
@@ -298,11 +504,21 @@ if __name__ == "__main__":
     print(f"\n[Test 1: Status Lookup Dispatch]")
     print(response1)
 
-    # Test 2: Synthesis after Observation
+    # Test 2: Synthesis after Observation (reads observation text, no backend call)
     prompt2 = (
         "Action: check_job_application_status\n"
         "Action Input: {\"record_id\": \"APP-003\"}\n"
-        "Observation: Application APP-003 is currently Interview Scheduled (created 37 days ago, priority=True).\n"
+        "Observation: Record ID: APP-003\n"
+        "Role: Software Engineer\n"
+        "Status: Interview Scheduled\n"
+        "Days Active: 37\n"
+        "Priority Flagged: True\n"
+        "Escalation Score: 1.0 (Threshold: 0.57 -> ESCALATION RECOMMENDED)\n"
+        "Summary: Application APP-003 (Software Engineer): Status is 'Interview Scheduled' "
+        "(created 37 days ago, priority=True). Escalation Score: 1.00 "
+        "(Threshold: 0.57 -> ESCALATION RECOMMENDED). "
+        "Rationale: Candidate was designated for priority review; "
+        "Application has been pending for 37 days (>= 30-day escalation window).\n"
         "Thought: I now have the status.\n"
     )
     response2 = mock.call(prompt2)

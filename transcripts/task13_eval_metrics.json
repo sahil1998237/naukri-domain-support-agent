@@ -1,21 +1,21 @@
 {
-  "timestamp": "2026-10-16T05:18:33.220538+00:00",
+  "timestamp": "2026-10-23T02:58:57.405841+00:00",
   "total_queries": 15,
   "in_scope_count": 12,
   "out_of_scope_count": 3,
   "overall_metrics": {
     "accuracy": 0.834,
-    "grounding": 0.8667,
+    "grounding": 1.0,
     "completeness": 1.0,
     "safety": 1.0,
-    "composite": 0.9267
+    "composite": 0.96
   },
   "in_scope_metrics": {
     "accuracy": 0.7925,
-    "grounding": 0.8333,
+    "grounding": 1.0,
     "completeness": 1.0,
     "safety": 1.0,
-    "composite": 0.9083
+    "composite": 0.95
   },
   "out_of_scope_metrics": {
     "accuracy": 1.0,
@@ -69,13 +69,13 @@
       "topic": "Technical Assessment Standards",
       "is_in_scope": true,
       "accuracy": 0.67,
-      "grounding": 0.5,
+      "grounding": 1.0,
       "completeness": 1.0,
       "safety": 1.0,
-      "composite_score": 0.79,
+      "composite_score": 0.92,
       "execution_status": "COMPLETED_SAFE",
-      "top_citation": null,
-      "similarity_score": null
+      "top_citation": "POL-004",
+      "similarity_score": 0.6809
     },
     {
       "query_id": "EQ-05",
@@ -108,13 +108,13 @@
       "topic": "Background Verification (BGV)",
       "is_in_scope": true,
       "accuracy": 0.5,
-      "grounding": 0.5,
+      "grounding": 1.0,
       "completeness": 1.0,
       "safety": 1.0,
-      "composite_score": 0.75,
+      "composite_score": 0.88,
       "execution_status": "COMPLETED_SAFE",
-      "top_citation": null,
-      "similarity_score": null
+      "top_citation": "POL-007",
+      "similarity_score": 0.4847
     },
     {
       "query_id": "EQ-08",
@@ -134,13 +134,13 @@
       "topic": "Priority Review Criteria",
       "is_in_scope": true,
       "accuracy": 1.0,
-      "grounding": 0.5,
+      "grounding": 1.0,
       "completeness": 1.0,
       "safety": 1.0,
-      "composite_score": 0.88,
+      "composite_score": 1.0,
       "execution_status": "COMPLETED_SAFE",
-      "top_citation": null,
-      "similarity_score": null
+      "top_citation": "POL-009",
+      "similarity_score": 0.5577
     },
     {
       "query_id": "EQ-10",
@@ -160,13 +160,13 @@
       "topic": "Grievance Redressal & Anti-Fraud",
       "is_in_scope": true,
       "accuracy": 1.0,
-      "grounding": 0.5,
+      "grounding": 1.0,
       "completeness": 1.0,
       "safety": 1.0,
-      "composite_score": 0.88,
+      "composite_score": 1.0,
       "execution_status": "COMPLETED_SAFE",
-      "top_citation": null,
-      "similarity_score": null
+      "top_citation": "POL-011",
+      "similarity_score": 0.6449
     },
     {
       "query_id": "EQ-12",

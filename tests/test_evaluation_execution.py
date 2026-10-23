@@ -14,11 +14,14 @@ Verifies:
 
 import json
 from pathlib import Path
+import sys
 import unittest
 
-from evaluation.eval_suite import EVALUATION_QUERIES, run_evaluation_suite
-
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from evaluation.eval_suite import EVALUATION_QUERIES, run_evaluation_suite
 
 
 class TestDay10EvaluationExecution(unittest.TestCase):

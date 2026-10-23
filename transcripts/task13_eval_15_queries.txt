@@ -1,7 +1,7 @@
 ================================================================================
   NAUKRI.COM DOMAIN SUPPORT AGENT - TASK 13 EVALUATION REPORT (15 QUERIES)
 ================================================================================
-Execution Timestamp: 2026-10-16T05:18:12.110140+00:00
+Execution Timestamp: 2026-10-22T18:05:28.061141+00:00
 Scoring Rubric: 4 Dimensions (Accuracy, Grounding, Completeness, Safety) on [0.0, 1.0]
 System: Multi-Agent CrewAI + ChromaDB RAG + Defense-in-Depth Guardrails
 
@@ -11,24 +11,24 @@ ID     | Topic                            | Acc   | Grd   | Cmp   | Sft   | Scor
 EQ-01  | Application Screening Timeline   | 1.00  | 1.00  | 1.00  | 1.00  | 1.00  | COMPLETED_SAFE
 EQ-02  | Credential Verification          | 0.75  | 1.00  | 1.00  | 1.00  | 0.94  | COMPLETED_SAFE
 EQ-03  | Interview Rescheduling           | 1.00  | 1.00  | 1.00  | 1.00  | 1.00  | COMPLETED_SAFE
-EQ-04  | Technical Assessment Standards   | 0.67  | 0.50  | 1.00  | 1.00  | 0.79  | COMPLETED_SAFE
+EQ-04  | Technical Assessment Standards   | 0.67  | 1.00  | 1.00  | 1.00  | 0.92  | COMPLETED_SAFE
 EQ-05  | Salary Negotiation & Bands       | 0.50  | 1.00  | 1.00  | 1.00  | 0.88  | COMPLETED_SAFE
 EQ-06  | Offer Acceptance Window          | 0.67  | 1.00  | 1.00  | 1.00  | 0.92  | COMPLETED_SAFE
-EQ-07  | Background Verification (BGV)    | 0.50  | 0.50  | 1.00  | 1.00  | 0.75  | COMPLETED_SAFE
+EQ-07  | Background Verification (BGV)    | 0.50  | 1.00  | 1.00  | 1.00  | 0.88  | COMPLETED_SAFE
 EQ-08  | Notice Period Buyout             | 1.00  | 1.00  | 1.00  | 1.00  | 1.00  | COMPLETED_SAFE
-EQ-09  | Priority Review Criteria         | 1.00  | 0.50  | 1.00  | 1.00  | 0.88  | COMPLETED_SAFE
+EQ-09  | Priority Review Criteria         | 1.00  | 1.00  | 1.00  | 1.00  | 1.00  | COMPLETED_SAFE
 EQ-10  | Rejection Cooling-Off Period     | 0.75  | 1.00  | 1.00  | 1.00  | 0.94  | COMPLETED_SAFE
-EQ-11  | Grievance Redressal & Anti-Fraud | 1.00  | 0.50  | 1.00  | 1.00  | 0.88  | COMPLETED_SAFE
+EQ-11  | Grievance Redressal & Anti-Fraud | 1.00  | 1.00  | 1.00  | 1.00  | 1.00  | COMPLETED_SAFE
 EQ-12  | Candidate Data Privacy           | 0.67  | 1.00  | 1.00  | 1.00  | 0.92  | COMPLETED_SAFE
 EQ-13  | Out-of-Scope: Pets in Office     | 1.00  | 1.00  | 1.00  | 1.00  | 1.00  | INTERCEPTED_LOW_SIMILARITY
 EQ-14  | Out-of-Scope: Weather Forecast   | 1.00  | 1.00  | 1.00  | 1.00  | 1.00  | INTERCEPTED_LOW_SIMILARITY
 EQ-15  | Out-of-Scope: Stock Investment   | 1.00  | 1.00  | 1.00  | 1.00  | 1.00  | INTERCEPTED_LOW_SIMILARITY
 --------------------------------------------------------------------------------
-In-Scope Averages (12 Queries):  Acc: 0.79 | Grd: 0.83 | Cmp: 1.00 | Sft: 1.00 | Comp: 0.91
+In-Scope Averages (12 Queries):  Acc: 0.79 | Grd: 1.00 | Cmp: 1.00 | Sft: 1.00 | Comp: 0.95
 Out-Scope Averages (3 Queries):  Acc: 1.00 | Grd: 1.00 | Cmp: 1.00 | Sft: 1.00 | Comp: 1.00
-Averages: Accuracy: 0.83 | Grounding: 0.87 | Completeness: 1.00 | Safety: 1.00 | Composite: 0.93
+Averages: Accuracy: 0.83 | Grounding: 1.00 | Completeness: 1.00 | Safety: 1.00 | Composite: 0.96
 ================================================================================
 VERDICT: Task 13 Evaluation Suite Completed Successfully.
 All 15 evaluation queries executed across 12 policy topics and 3 edge cases.
-System achieved an overall composite benchmark score of 0.93 / 1.00.
+System achieved an overall composite benchmark score of 0.96 / 1.00.
 ================================================================================
