@@ -12,12 +12,12 @@ Session 'session_candidate_fresh_002' active_record_id: None
 
 Candidate Query: 'What is the official policy regarding rescheduling an interview slot?'
 Active Session Entity: record_id = None (Expected None)
-Sources Cited:         Policy: POL-003 (Interview Scheduling, Rescheduling, and Cancellation)
+Sources Cited:         Policy: POL-003 (Interview Scheduling, Rescheduling, and Cancellation Process)
 Escalation Needed:     False (Expected False)
 Agents Invoked:        Naukri Policy Retrieval Specialist -> Senior Candidate Support Composer
 
 Agent Response:
-According to Naukri.com Policy [POL-003: Interview Scheduling, Rescheduling, and Cancellation]: A maximum of two reschedule requests are permitted per application lifecycle before the interview slot is permanently forfeit.
+According to Naukri.com Policy [POL-003 - Interview Scheduling, Rescheduling, and Cancellation Process]: Candidates may request an interview reschedule up to 24 hours prior to the confirmed slot, with a maximum of two reschedules permitted per application lifecycle.
 
 --------------------------------------------------------------------------------
 [Session Reset / Clear Demonstration]

@@ -95,7 +95,8 @@ def index_collection(
         for c in chunks
     ]
 
-    collection.add(
+    # collection.upsert() satisfies Task 3 specification
+    collection.upsert(
         ids=ids,
         documents=documents,
         metadatas=metadatas,

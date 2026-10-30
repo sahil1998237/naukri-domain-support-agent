@@ -4,7 +4,7 @@
     "category": "Software Engineer",
     "status": "Rejected",
     "expected_salary_inr": 2025000,
-    "days_since_created": 9,
+    "days_since_created": 4,
     "flagged_priority_review": false
   },
   {
@@ -12,7 +12,7 @@
     "category": "HR Executive",
     "status": "Screening",
     "expected_salary_inr": 2600000,
-    "days_since_created": 60,
+    "days_since_created": 29,
     "flagged_priority_review": false
   },
   {
@@ -20,7 +20,7 @@
     "category": "Software Engineer",
     "status": "Interview Scheduled",
     "expected_salary_inr": 2125000,
-    "days_since_created": 37,
+    "days_since_created": 18,
     "flagged_priority_review": true
   },
   {
@@ -28,7 +28,7 @@
     "category": "Product Manager",
     "status": "Applied",
     "expected_salary_inr": 1800000,
-    "days_since_created": 16,
+    "days_since_created": 7,
     "flagged_priority_review": false
   },
   {
@@ -36,7 +36,7 @@
     "category": "HR Executive",
     "status": "Applied",
     "expected_salary_inr": 2800000,
-    "days_since_created": 31,
+    "days_since_created": 15,
     "flagged_priority_review": true
   },
   {
@@ -44,7 +44,7 @@
     "category": "Product Manager",
     "status": "Interview Scheduled",
     "expected_salary_inr": 2875000,
-    "days_since_created": 27,
+    "days_since_created": 13,
     "flagged_priority_review": false
   },
   {
@@ -52,7 +52,7 @@
     "category": "Software Engineer",
     "status": "Interview Scheduled",
     "expected_salary_inr": 900000,
-    "days_since_created": 7,
+    "days_since_created": 3,
     "flagged_priority_review": false
   },
   {
@@ -60,7 +60,7 @@
     "category": "Data Analyst",
     "status": "Offered",
     "expected_salary_inr": 600000,
-    "days_since_created": 43,
+    "days_since_created": 21,
     "flagged_priority_review": false
   },
   {
@@ -68,7 +68,7 @@
     "category": "Sales Associate",
     "status": "Screening",
     "expected_salary_inr": 1675000,
-    "days_since_created": 23,
+    "days_since_created": 11,
     "flagged_priority_review": false
   },
   {
@@ -76,7 +76,7 @@
     "category": "Software Engineer",
     "status": "Applied",
     "expected_salary_inr": 1650000,
-    "days_since_created": 27,
+    "days_since_created": 13,
     "flagged_priority_review": false
   },
   {
@@ -84,7 +84,7 @@
     "category": "HR Executive",
     "status": "Applied",
     "expected_salary_inr": 1775000,
-    "days_since_created": 56,
+    "days_since_created": 27,
     "flagged_priority_review": false
   },
   {
@@ -92,7 +92,7 @@
     "category": "HR Executive",
     "status": "Screening",
     "expected_salary_inr": 2625000,
-    "days_since_created": 4,
+    "days_since_created": 1,
     "flagged_priority_review": false
   },
   {
@@ -100,7 +100,7 @@
     "category": "Sales Associate",
     "status": "Screening",
     "expected_salary_inr": 2450000,
-    "days_since_created": 42,
+    "days_since_created": 20,
     "flagged_priority_review": false
   },
   {
@@ -108,7 +108,7 @@
     "category": "HR Executive",
     "status": "Rejected",
     "expected_salary_inr": 2350000,
-    "days_since_created": 7,
+    "days_since_created": 3,
     "flagged_priority_review": true
   },
   {
@@ -116,7 +116,7 @@
     "category": "Software Engineer",
     "status": "Applied",
     "expected_salary_inr": 475000,
-    "days_since_created": 26,
+    "days_since_created": 12,
     "flagged_priority_review": true
   },
   {
@@ -124,7 +124,7 @@
     "category": "Data Analyst",
     "status": "Rejected",
     "expected_salary_inr": 2625000,
-    "days_since_created": 22,
+    "days_since_created": 10,
     "flagged_priority_review": true
   },
   {
@@ -132,7 +132,7 @@
     "category": "Product Manager",
     "status": "Screening",
     "expected_salary_inr": 2850000,
-    "days_since_created": 56,
+    "days_since_created": 27,
     "flagged_priority_review": false
   },
   {
@@ -140,7 +140,7 @@
     "category": "Data Analyst",
     "status": "Interview Scheduled",
     "expected_salary_inr": 625000,
-    "days_since_created": 16,
+    "days_since_created": 7,
     "flagged_priority_review": true
   },
   {
@@ -148,7 +148,7 @@
     "category": "Software Engineer",
     "status": "Applied",
     "expected_salary_inr": 900000,
-    "days_since_created": 13,
+    "days_since_created": 6,
     "flagged_priority_review": false
   },
   {
@@ -156,7 +156,7 @@
     "category": "Sales Associate",
     "status": "Screening",
     "expected_salary_inr": 2000000,
-    "days_since_created": 29,
+    "days_since_created": 14,
     "flagged_priority_review": false
   },
   {
@@ -164,7 +164,7 @@
     "category": "Data Analyst",
     "status": "Screening",
     "expected_salary_inr": 725000,
-    "days_since_created": 28,
+    "days_since_created": 13,
     "flagged_priority_review": false
   },
   {
@@ -172,7 +172,7 @@
     "category": "Sales Associate",
     "status": "Applied",
     "expected_salary_inr": 875000,
-    "days_since_created": 18,
+    "days_since_created": 8,
     "flagged_priority_review": true
   },
   {
@@ -180,7 +180,7 @@
     "category": "Data Analyst",
     "status": "Interview Scheduled",
     "expected_salary_inr": 1775000,
-    "days_since_created": 16,
+    "days_since_created": 7,
     "flagged_priority_review": false
   },
   {
@@ -188,7 +188,7 @@
     "category": "Sales Associate",
     "status": "Rejected",
     "expected_salary_inr": 525000,
-    "days_since_created": 29,
+    "days_since_created": 14,
     "flagged_priority_review": false
   },
   {
@@ -196,7 +196,7 @@
     "category": "Data Analyst",
     "status": "Offered",
     "expected_salary_inr": 2875000,
-    "days_since_created": 56,
+    "days_since_created": 27,
     "flagged_priority_review": false
   },
   {
@@ -204,7 +204,7 @@
     "category": "Data Analyst",
     "status": "Screening",
     "expected_salary_inr": 2050000,
-    "days_since_created": 7,
+    "days_since_created": 3,
     "flagged_priority_review": false
   },
   {
@@ -212,7 +212,7 @@
     "category": "Sales Associate",
     "status": "Screening",
     "expected_salary_inr": 450000,
-    "days_since_created": 42,
+    "days_since_created": 20,
     "flagged_priority_review": false
   },
   {
@@ -220,7 +220,7 @@
     "category": "Product Manager",
     "status": "Screening",
     "expected_salary_inr": 2025000,
-    "days_since_created": 54,
+    "days_since_created": 26,
     "flagged_priority_review": false
   },
   {
@@ -228,7 +228,7 @@
     "category": "Product Manager",
     "status": "Interview Scheduled",
     "expected_salary_inr": 325000,
-    "days_since_created": 6,
+    "days_since_created": 2,
     "flagged_priority_review": false
   },
   {
@@ -236,7 +236,7 @@
     "category": "Software Engineer",
     "status": "Screening",
     "expected_salary_inr": 2700000,
-    "days_since_created": 55,
+    "days_since_created": 27,
     "flagged_priority_review": false
   },
   {
@@ -244,7 +244,7 @@
     "category": "Data Analyst",
     "status": "Applied",
     "expected_salary_inr": 1050000,
-    "days_since_created": 11,
+    "days_since_created": 5,
     "flagged_priority_review": false
   },
   {
@@ -252,7 +252,7 @@
     "category": "Data Analyst",
     "status": "Offered",
     "expected_salary_inr": 1600000,
-    "days_since_created": 32,
+    "days_since_created": 15,
     "flagged_priority_review": true
   },
   {
@@ -260,7 +260,7 @@
     "category": "HR Executive",
     "status": "Interview Scheduled",
     "expected_salary_inr": 1825000,
-    "days_since_created": 14,
+    "days_since_created": 6,
     "flagged_priority_review": true
   },
   {
@@ -268,7 +268,7 @@
     "category": "HR Executive",
     "status": "Interview Scheduled",
     "expected_salary_inr": 1575000,
-    "days_since_created": 58,
+    "days_since_created": 28,
     "flagged_priority_review": false
   },
   {
@@ -276,7 +276,7 @@
     "category": "Data Analyst",
     "status": "Applied",
     "expected_salary_inr": 475000,
-    "days_since_created": 11,
+    "days_since_created": 5,
     "flagged_priority_review": false
   },
   {
@@ -284,7 +284,7 @@
     "category": "HR Executive",
     "status": "Applied",
     "expected_salary_inr": 1500000,
-    "days_since_created": 1,
+    "days_since_created": 0,
     "flagged_priority_review": false
   },
   {
@@ -292,7 +292,7 @@
     "category": "HR Executive",
     "status": "Screening",
     "expected_salary_inr": 1525000,
-    "days_since_created": 17,
+    "days_since_created": 8,
     "flagged_priority_review": false
   },
   {
@@ -300,7 +300,7 @@
     "category": "Sales Associate",
     "status": "Screening",
     "expected_salary_inr": 2800000,
-    "days_since_created": 51,
+    "days_since_created": 25,
     "flagged_priority_review": false
   },
   {
@@ -308,7 +308,7 @@
     "category": "Software Engineer",
     "status": "Interview Scheduled",
     "expected_salary_inr": 1750000,
-    "days_since_created": 19,
+    "days_since_created": 9,
     "flagged_priority_review": false
   },
   {
@@ -316,7 +316,7 @@
     "category": "Product Manager",
     "status": "Rejected",
     "expected_salary_inr": 1650000,
-    "days_since_created": 45,
+    "days_since_created": 22,
     "flagged_priority_review": false
   },
   {
@@ -324,7 +324,7 @@
     "category": "Product Manager",
     "status": "Applied",
     "expected_salary_inr": 2625000,
-    "days_since_created": 51,
+    "days_since_created": 25,
     "flagged_priority_review": false
   },
   {
@@ -332,7 +332,7 @@
     "category": "Sales Associate",
     "status": "Applied",
     "expected_salary_inr": 2075000,
-    "days_since_created": 43,
+    "days_since_created": 21,
     "flagged_priority_review": false
   },
   {
@@ -340,7 +340,7 @@
     "category": "HR Executive",
     "status": "Interview Scheduled",
     "expected_salary_inr": 2575000,
-    "days_since_created": 32,
+    "days_since_created": 15,
     "flagged_priority_review": false
   },
   {
@@ -348,7 +348,7 @@
     "category": "Sales Associate",
     "status": "Interview Scheduled",
     "expected_salary_inr": 775000,
-    "days_since_created": 13,
+    "days_since_created": 6,
     "flagged_priority_review": false
   },
   {
@@ -356,7 +356,7 @@
     "category": "Product Manager",
     "status": "Rejected",
     "expected_salary_inr": 1225000,
-    "days_since_created": 14,
+    "days_since_created": 6,
     "flagged_priority_review": false
   },
   {
@@ -364,7 +364,7 @@
     "category": "Sales Associate",
     "status": "Offered",
     "expected_salary_inr": 475000,
-    "days_since_created": 38,
+    "days_since_created": 18,
     "flagged_priority_review": false
   },
   {
@@ -372,7 +372,7 @@
     "category": "Software Engineer",
     "status": "Applied",
     "expected_salary_inr": 2650000,
-    "days_since_created": 35,
+    "days_since_created": 17,
     "flagged_priority_review": false
   },
   {
@@ -380,7 +380,7 @@
     "category": "Software Engineer",
     "status": "Screening",
     "expected_salary_inr": 475000,
-    "days_since_created": 48,
+    "days_since_created": 23,
     "flagged_priority_review": false
   },
   {
@@ -388,7 +388,7 @@
     "category": "Software Engineer",
     "status": "Rejected",
     "expected_salary_inr": 1300000,
-    "days_since_created": 4,
+    "days_since_created": 1,
     "flagged_priority_review": true
   },
   {
@@ -396,7 +396,7 @@
     "category": "Software Engineer",
     "status": "Screening",
     "expected_salary_inr": 450000,
-    "days_since_created": 38,
+    "days_since_created": 18,
     "flagged_priority_review": false
   }
 ]

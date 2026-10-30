@@ -56,8 +56,23 @@ class TestDay11AutoGenReviewStage(unittest.TestCase):
             has_hallucinations_removed=False,
         )
         self.assertTrue(model.is_approved)
+        self.assertTrue(model.approved)
+        self.assertEqual(model.final_answer, "Approved text.")
+        self.assertEqual(model.reason, "All clauses verified against official policies.")
         self.assertEqual(model.compliance_score, 0.95)
         self.assertEqual(model.policy_citations, ["POL-001"])
+
+        # Direct instantiation with spec-mandated fields (approved, final_answer, reason)
+        spec_model = VerdictModel(
+            approved=True,
+            final_answer="Direct answer.",
+            reason="Verified successfully.",
+            compliance_score=1.0,
+        )
+        self.assertTrue(spec_model.approved)
+        self.assertTrue(spec_model.is_approved)
+        self.assertEqual(spec_model.final_answer, "Direct answer.")
+        self.assertEqual(spec_model.reason, "Verified successfully.")
 
         # Out-of-bounds score rejection (< 0.0 or > 1.0)
         with self.assertRaises(ValidationError):

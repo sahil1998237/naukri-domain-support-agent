@@ -1,50 +1,68 @@
 === NAUKRI.COM DOMAIN SUPPORT AGENT - TASK 4 TRANSCRIPT ===
 Task: Grounded Generation with Empirically Calibrated Similarity Threshold
 Model: all-MiniLM-L6-v2 | Vector Store: ChromaDB (Cosine Space)
-Empirical Separation Gap: [0.1807, 0.6173] | Calibrated Threshold: 0.4000
+Empirical Separation Gap: [0.2090, 0.5407] | Calibrated Threshold: 0.4000
 
 --------------------------------------------------------------------------------
 [TEST CASE 1: In-Scope Interview Rescheduling Policy]
 Query: "What is the policy for rescheduling an interview?"
 Strategy: sentence
-Top-1 Hit: POL-003 (Interview Scheduling, Rescheduling, and Cancellation)
-Cosine Similarity: 0.6248 (Threshold: 0.4000 -> PASS)
+Top-1 Hit: POL-003 (Interview Scheduling, Rescheduling, and Cancellation Process)
+Cosine Similarity: 0.6955 (Threshold: 0.4000 -> PASS)
 Grounded: True
-Generated Answer: According to Naukri.com Policy [POL-003: Interview Scheduling, Rescheduling, and Cancellation]: A maximum of two reschedule requests are permitted per application lifecycle before the interview slot is permanently forfeit.
+Generated Answer: According to Naukri.com Policy [POL-003: Interview Scheduling, Rescheduling, and Cancellation Process]: Candidates may request an interview reschedule up to 24 hours prior to the confirmed slot, with a maximum of two reschedules permitted per application lifecycle.
 
 --------------------------------------------------------------------------------
-[TEST CASE 2: In-Scope Cooling-Off Period Policy]
-Query: "How long is the cooling-off period after a rejection?"
+[TEST CASE 2: In-Scope Referral Bonus Policy]
+Query: "What is the referral bonus payout schedule and policy?"
 Strategy: sentence
-Top-1 Hit: POL-010 (Candidate Rejection and Cooling-Off Period)
-Cosine Similarity: 0.7569 (Threshold: 0.4000 -> PASS)
+Top-1 Hit: POL-009 (Employee Referral-Bonus Policy and Payout Structure)
+Cosine Similarity: 0.8023 (Threshold: 0.4000 -> PASS)
 Grounded: True
-Generated Answer: According to Naukri.com Policy [POL-010: Candidate Rejection and Cooling-Off Period]: Candidates who receive a formal rejection after the interview or screening stage are subject to a mandatory 6-month cooling-off period before reapplying for the same role.
+Generated Answer: According to Naukri.com Policy [POL-009: Employee Referral-Bonus Policy and Payout Structure]: Bonus payouts are disbursed in the referral sponsor's payroll cycle following the referred employee's successful completion of 90 days of active service.
 
 --------------------------------------------------------------------------------
-[TEST CASE 3: In-Scope Notice Period Buyout Assistance]
-Query: "Can I request notice period buyout assistance for an urgent joining date?"
+[TEST CASE 3: In-Scope Probation Period Policy]
+Query: "How long is the standard probation period and performance review timeline?"
 Strategy: sentence
-Top-1 Hit: POL-008 (Notice Period Buyout and Joining Date Guidelines)
-Cosine Similarity: 0.6334 (Threshold: 0.4000 -> PASS)
+Top-1 Hit: POL-004 (Probation-Period Policy and Performance Confirmation Guidelines)
+Cosine Similarity: 0.6831 (Threshold: 0.4000 -> PASS)
 Grounded: True
-Generated Answer: According to Naukri.com Policy [POL-008: Notice Period Buyout and Joining Date Guidelines]: Notice period buyout assistance of up to 30 days basic salary may be approved for critical roles upon business unit head authorization.
+Generated Answer: According to Naukri.com Policy [POL-004: Probation-Period Policy and Performance Confirmation Guidelines]: Upon successful completion of the review, candidates receive written confirmation of regular employment, while unsatisfactory evaluations may result in a one-time probation extension of up to 3 months.
 
 --------------------------------------------------------------------------------
-[TEST CASE 4: Out-of-Scope Weather Query (Safety / Anti-Hallucination Guard)]
+[TEST CASE 4: In-Scope Background Verification Process]
+Query: "What background verification checks and documents are required for selected candidates?"
+Strategy: sentence
+Top-1 Hit: POL-007 (Background-Verification Process and Criminal Records Check)
+Cosine Similarity: 0.5322 (Threshold: 0.4000 -> PASS)
+Grounded: True
+Generated Answer: According to Naukri.com Policy [POL-007: Background-Verification Process and Criminal Records Check]: The verification audits past 7 years of employment records, educational degree credentials, and criminal database registers.
+
+--------------------------------------------------------------------------------
+[TEST CASE 5: In-Scope Applicant Data Retention Policy]
+Query: "How long does Naukri retain applicant data under the privacy policy?"
+Strategy: sentence
+Top-1 Hit: POL-012 (Applicant-Data-Retention Policy and Candidate Privacy Protection)
+Cosine Similarity: 0.5697 (Threshold: 0.4000 -> PASS)
+Grounded: True
+Generated Answer: According to Naukri.com Policy [POL-012: Applicant-Data-Retention Policy and Candidate Privacy Protection]: The applicant-data-retention policy governs the lawful storage, encryption, and lifecycle management of all candidate resumes and application records submitted to the platform.
+
+--------------------------------------------------------------------------------
+[TEST CASE 6: Out-of-Scope Weather Query (Safety / Anti-Hallucination Guard)]
 Query: "What is the weather forecast for Bangalore today?"
 Strategy: sentence
-Top-1 Hit: POL-009 (Best noise match: Priority Application Review)
-Cosine Similarity: 0.1582 (Threshold: 0.4000 -> REJECT)
+Top-1 Hit: N/A (No relevant policy match)
+Cosine Similarity: 0.1323 (Threshold: 0.4000 -> REJECT)
 Grounded: False
 Generated Answer: I do not have sufficient policy information in the knowledge base to answer this question. Please contact the Naukri Help Desk or an HR representative.
 
 --------------------------------------------------------------------------------
-[TEST CASE 5: Out-of-Scope Irrelevant Query (Pet in Office)]
+[TEST CASE 7: Out-of-Scope Irrelevant Query (Pet in Office)]
 Query: "Can I bring my pet dog to the office on Fridays?"
 Strategy: sentence
-Top-1 Hit: POL-006 (Best noise match: Offer Letter Issuance)
-Cosine Similarity: 0.1807 (Threshold: 0.4000 -> REJECT)
+Top-1 Hit: N/A (No relevant policy match)
+Cosine Similarity: 0.2090 (Threshold: 0.4000 -> REJECT)
 Grounded: False
 Generated Answer: I do not have sufficient policy information in the knowledge base to answer this question. Please contact the Naukri Help Desk or an HR representative.
 

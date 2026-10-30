@@ -26,7 +26,7 @@ from pathlib import Path
 import sys
 from typing import Any, Dict, List, Optional, Sequence, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
@@ -43,22 +43,30 @@ from autogen_ext.models.replay import ReplayChatCompletionClient
 # ==============================================================================
 
 class VerdictModel(BaseModel):
-    """Formal structured output contract emitted by the Final-Editor agent."""
-    is_approved: bool = Field(
+    """
+    Formal structured output contract emitted by the Final-Editor agent (Task 14).
+    Directly satisfies the required schema:
+    - approved: bool
+    - final_answer: str
+    - reason: str
+    Also retains full backward compatibility for legacy properties:
+    - is_approved, revised_answer, review_comments
+    """
+    approved: bool = Field(
         ...,
         description="True if draft was policy-grounded without fabrication; False if revisions were required."
+    )
+    final_answer: str = Field(
+        ...,
+        description="The final candidate-facing text (sanitized and verified)."
+    )
+    reason: str = Field(
+        ...,
+        description="Detailed review audit commentary explaining adherence or flagged violations."
     )
     policy_citations: List[str] = Field(
         default_factory=list,
         description="List of official policy IDs verified (e.g. ['POL-001'])."
-    )
-    review_comments: str = Field(
-        ...,
-        description="Detailed review audit commentary explaining adherence or flagged violations."
-    )
-    revised_answer: str = Field(
-        ...,
-        description="The final candidate-facing text (sanitized and verified)."
     )
     compliance_score: float = Field(
         ...,
@@ -70,6 +78,30 @@ class VerdictModel(BaseModel):
         default=False,
         description="True if ungrounded claims or hallucinations were expunged during editing."
     )
+
+    @model_validator(mode="before")
+    @classmethod
+    def reconcile_legacy_fields(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            if "approved" not in data and "is_approved" in data:
+                data["approved"] = data["is_approved"]
+            if "final_answer" not in data and "revised_answer" in data:
+                data["final_answer"] = data["revised_answer"]
+            if "reason" not in data and "review_comments" in data:
+                data["reason"] = data["review_comments"]
+        return data
+
+    @property
+    def is_approved(self) -> bool:
+        return self.approved
+
+    @property
+    def revised_answer(self) -> str:
+        return self.final_answer
+
+    @property
+    def review_comments(self) -> str:
+        return self.reason
 
 
 # ==============================================================================
@@ -95,10 +127,10 @@ REVIEWER_APPROVAL_CRITIQUE = (
 )
 
 EDITOR_APPROVAL_VERDICT = VerdictModel(
-    is_approved=True,
+    approved=True,
     policy_citations=["POL-001"],
-    review_comments="Draft fully verified against POL-001. All stated timelines and escalation thresholds are grounded in official policies.",
-    revised_answer=(
+    reason="Draft fully verified against POL-001. All stated timelines and escalation thresholds are grounded in official policies.",
+    final_answer=(
         "According to Naukri.com Policy [POL-001: Job Application Screening Timelines]: "
         "Submitted applications undergo initial screening within 3 to 5 business days. "
         "If your application remains in 'Submitted' status past 14 business days, you may request "
@@ -127,10 +159,10 @@ REVIEWER_REVISION_CRITIQUE = (
 )
 
 EDITOR_REVISION_VERDICT = VerdictModel(
-    is_approved=False,
+    approved=False,
     policy_citations=["POL-001"],
-    review_comments="REVISED: Excised fabricated INR 50,000 joining bonus and unlimited paid leaves claim. Restored strictly grounded policy clauses.",
-    revised_answer=(
+    reason="REVISED: Excised fabricated INR 50,000 joining bonus and unlimited paid leaves claim. Restored strictly grounded policy clauses.",
+    final_answer=(
         "According to Naukri.com Policy [POL-001: Job Application Screening Timelines]: "
         "Submitted applications undergo initial screening within 3 to 5 business days. "
         "Please note that Naukri.com does not disburse cash joining bonuses or unverified monetary incentives."

@@ -1,86 +1,86 @@
 [
   {
     "doc_id": "POL-001",
-    "title": "Application Shortlisting and Screening Timeline",
+    "title": "Job-Application Eligibility Criteria and Screening Timeline",
     "category": "Application Process",
-    "content": "All submitted job applications on the Naukri platform undergo initial screening within 3 to 5 business days by the assigned talent acquisition team. Candidates whose profiles match minimum educational qualifications and experience benchmarks will be transitioned to the Screening status. Applications that remain unreviewed after 14 business days are automatically escalated to the recruitment lead for expedited triage.",
-    "tags": ["screening", "timeline", "shortlisting", "application", "escalation", "days"]
+    "content": "All job applications submitted on the Naukri platform must satisfy baseline eligibility criteria including recognized university degrees and verified functional experience benchmarks. Applications undergo initial screening within 3 to 5 business days by the assigned talent acquisition team. Profiles meeting all eligibility criteria transition to Screening status, while applications unreviewed after 14 business days are escalated to the recruitment lead.",
+    "tags": ["eligibility", "criteria", "screening", "timeline", "shortlisting", "application", "escalation", "days"]
   },
   {
     "doc_id": "POL-002",
-    "title": "Candidate Resume and Credential Verification",
-    "category": "Verification",
-    "content": "Candidates must furnish verified educational certificates, employment history records, and government identity proof prior to final round scheduling. Any discrepancy exceeding 10% in declared prior tenure or unverified academic degrees results in immediate application disqualification. Naukri verified badge holders receive accelerated background credential clearance during initial screening.",
-    "tags": ["verification", "resume", "credentials", "certificates", "degrees", "discrepancy"]
+    "title": "Internal-Transfer Eligibility and Career Mobility Policy",
+    "category": "Internal Mobility",
+    "content": "Current employees are eligible to apply for internal job transfers across functional departments after completing a minimum tenure of 12 months in their present role. Applicants must hold a consistent performance rating of at least 3.5 out of 5 and receive written endorsement from their direct manager. Candidates seeking internal lateral transfers undergo an expedited interview cycle with the destination department head.",
+    "tags": ["internal transfer", "transfer", "eligibility", "tenure", "career mobility", "internal hiring", "lateral move"]
   },
   {
     "doc_id": "POL-003",
-    "title": "Interview Scheduling, Rescheduling, and Cancellation",
+    "title": "Interview Scheduling, Rescheduling, and Cancellation Process",
     "category": "Interview Management",
-    "content": "Candidates may request a reschedule for technical or managerial interviews up to 24 hours prior to the scheduled slot via the Naukri candidate portal. A maximum of two reschedule requests are permitted per application lifecycle before the interview slot is permanently forfeit. Cancellations made with less than 4 hours notice without an approved emergency reason will result in automatic application rejection.",
-    "tags": ["interview", "scheduling", "reschedule", "cancellation", "slot", "calendar"]
+    "content": "The interview-scheduling process allows candidates to select preferred interview time slots directly through the Naukri candidate portal upon receipt of an invitation. Candidates may request an interview reschedule up to 24 hours prior to the confirmed slot, with a maximum of two reschedules permitted per application lifecycle. Cancellations made with less than 4 hours notice without an approved emergency reason will result in automatic application rejection.",
+    "tags": ["interview", "scheduling", "reschedule", "cancellation", "slot", "calendar", "process"]
   },
   {
     "doc_id": "POL-004",
-    "title": "Technical Evaluation and Assessment Standards",
-    "category": "Interview Management",
-    "content": "Technical assessments consist of hands-on coding challenges and domain-specific architectural discussions scored on a standardized 1 to 5 rubric. A composite benchmark score of at least 3.5 is strictly required to qualify for managerial and cultural fit evaluation. Assessment proctoring violations or detected AI-generated code during real-time evaluations trigger an immediate integrity review and test invalidation.",
-    "tags": ["technical", "assessment", "evaluation", "coding", "rubric", "proctoring"]
+    "title": "Probation-Period Policy and Performance Confirmation Guidelines",
+    "category": "Employment Terms",
+    "content": "All newly hired candidates are subject to a standard probation period of 6 months commencing on their official joining date. Formal performance reviews are conducted during the fifth month of probation to assess objective key results and cultural integration. Upon successful completion of the review, candidates receive written confirmation of regular employment, while unsatisfactory evaluations may result in a one-time probation extension of up to 3 months.",
+    "tags": ["probation", "probation period", "confirmation", "performance review", "extension", "employment terms"]
   },
   {
     "doc_id": "POL-005",
-    "title": "Salary Negotiation and Compensation Bands",
+    "title": "Offer-Negotiation Policy and Compensation Bands",
     "category": "Compensation",
-    "content": "Job offers strictly conform to predefined annual compensation bands determined by job role category, seniority tier, and market percentiles. Salary negotiation is permitted within a 15% range above the initial offer figure upon submission of competitive written offers or exceptional technical assessment ratings. Annual base salaries will not exceed the maximum threshold of INR 3,000,000 without executive compensation board approval.",
-    "tags": ["salary", "compensation", "negotiation", "bands", "inr", "offer"]
+    "content": "The offer-negotiation policy establishes standard compensation bands determined by job category, seniority level, and industry percentiles. Candidates may initiate salary negotiations within a 15% range above the initial offer figure by providing verified competing written offers or exceptional assessment scores. Annual compensation packages will not exceed the maximum band threshold of INR 3,000,000 without formal executive compensation board approval.",
+    "tags": ["offer negotiation", "salary", "compensation", "negotiation", "bands", "inr", "offer"]
   },
   {
     "doc_id": "POL-006",
-    "title": "Offer Letter Issuance and Acceptance Window",
-    "category": "Offer Management",
-    "content": "Formal offer letters are released digitally through the Naukri enterprise system within 48 hours following final interview round approval. Candidates are granted a standard validity window of 5 business days to review, digitally sign, and accept the offer terms. If an offer is neither accepted nor an extension formally requested within this period, the offer is revoked and presented to the next shortlisted candidate.",
-    "tags": ["offer", "acceptance", "issuance", "validity", "signature", "revoked"]
+    "title": "Remote-Work Eligibility and Hybrid Workplace Guidelines",
+    "category": "Workplace Guidelines",
+    "content": "Eligibility for remote work and hybrid working arrangements is determined by role designation, business requirements, and operational feasibility. Candidates hired for eligible roles may work remotely up to three days per week after completing their initial 90-day onboarding period. Remote-work authorization requires high-speed broadband connectivity, adherence to data protection standards, and quarterly performance reviews.",
+    "tags": ["remote work", "remote", "hybrid", "work from home", "eligibility", "wfh", "telecommuting"]
   },
   {
     "doc_id": "POL-007",
-    "title": "Background Verification (BGV) and Criminal Checks",
+    "title": "Background-Verification Process and Criminal Records Check",
     "category": "Verification",
-    "content": "All offer extensions are contingent upon successful completion of a comprehensive third-party background verification check covering past 7 years of employment. The BGV process audits criminal records, credit solvency for finance roles, and authenticates past employer relieving letters. Adverse findings categorized as red flags by the verification agency will result in immediate offer rescission.",
-    "tags": ["bgv", "background verification", "criminal", "check", "relieving letter", "red flag"]
+    "content": "All employment offers remain strictly conditional upon successful completion of a comprehensive background-verification process conducted by an accredited third-party agency. The verification audits past 7 years of employment records, educational degree credentials, and criminal database registers. Any falsification of credentials or adverse criminal findings will result in immediate offer rescission and disqualification from future consideration.",
+    "tags": ["bgv", "background verification", "background check", "criminal", "verification", "process", "credentials"]
   },
   {
     "doc_id": "POL-008",
-    "title": "Notice Period Buyout and Joining Date Guidelines",
+    "title": "Notice-Period Policy and Buyout Guidelines",
     "category": "Onboarding",
-    "content": "Standard candidate onboarding is scheduled within 30 to 60 calendar days from offer acceptance depending on candidate notice period obligations. Notice period buyout assistance of up to 30 days basic salary may be approved for critical roles upon business unit head authorization. Requests to defer joining dates beyond 60 days must be submitted at least two weeks before the original joining date.",
-    "tags": ["notice period", "buyout", "joining date", "onboarding", "deferral", "start date"]
+    "content": "Candidates must declare their existing employment notice-period obligations during final interview rounds, with standard expected joining dates scheduled within 30 to 60 calendar days. Notice-period buyout assistance of up to 30 days basic salary may be approved for critical technical and management roles upon business unit authorization. Joining dates may be deferred by up to 30 additional days only if written notice is submitted at least two weeks prior to the scheduled date.",
+    "tags": ["notice period", "buyout", "joining date", "onboarding", "notice", "policy", "start date"]
   },
   {
     "doc_id": "POL-009",
-    "title": "Priority Application Review and Escalation Criteria",
-    "category": "Application Process",
-    "content": "Applications designated under priority review receive fast-track screening within 24 to 48 hours from submission. Criteria for priority flagging include executive candidate referrals, critical skill shortages in product or engineering, or applications pending past 30 days without status updates. Priority status guarantees a dedicated recruiter contact and daily application status tracking.",
-    "tags": ["priority", "fast-track", "escalation", "urgent", "referral", "review"]
+    "title": "Employee Referral-Bonus Policy and Payout Structure",
+    "category": "Talent Acquisition",
+    "content": "The employee referral-bonus policy rewards staff who refer qualified candidates successfully hired through the Naukri portal. Referral bonuses are structured at INR 25,000 for standard individual contributor roles and INR 50,000 for critical or leadership positions. Bonus payouts are disbursed in the referral sponsor's payroll cycle following the referred employee's successful completion of 90 days of active service.",
+    "tags": ["referral bonus", "referral", "bonus", "payout", "employee referral", "reward", "incentive"]
   },
   {
     "doc_id": "POL-010",
-    "title": "Candidate Rejection and Cooling-Off Period",
-    "category": "Application Process",
-    "content": "Candidates who receive a formal rejection after the interview or screening stage are subject to a mandatory 6-month cooling-off period before reapplying for the same role. Reapplications submitted before the cooling-off period expires are automatically filtered out by the portal applicant tracking system. Candidates are free to apply for distinct functional categories during the cooling-off period if skills match.",
-    "tags": ["rejection", "cooling-off", "reapply", "timeline", "months", "ats"]
+    "title": "Exit-Interview Process, Offboarding, and Rehire Cooling-Off Period",
+    "category": "Separation & Retention",
+    "content": "The exit-interview process requires all departing employees to complete an offboarding questionnaire and participate in a confidential 45-minute discussion with human resources during their final working week. Insights gathered during exit interviews are documented to identify workplace improvements and organizational attrition factors. Candidates who leave or are rejected after interviews remain subject to a 6-month cooling-off period before reapplying for the identical position.",
+    "tags": ["exit interview", "offboarding", "separation", "cooling-off", "rehire", "reapply", "process", "feedback"]
   },
   {
     "doc_id": "POL-011",
-    "title": "Grievance Redressal and Anti-Fraud Reporting",
-    "category": "Compliance",
-    "content": "Naukri.com maintains a zero-tolerance policy against fraudulent recruitment activities, payment demands for interviews, and discriminatory hiring practices. Candidates can file formal grievances or report suspicious recruiter activity through the 24/7 Naukri Trust and Safety grievance portal. Verified recruitment fraud results in immediate de-listing of the hiring partner and blacklisting across all affiliate platforms.",
-    "tags": ["grievance", "fraud", "reporting", "safety", "trust", "scam", "blacklisting"]
+    "title": "Diversity-Hiring Guidelines and Equal Opportunity Framework",
+    "category": "Compliance & Inclusion",
+    "content": "Naukri diversity-hiring guidelines mandate that all candidate talent pipelines and shortlists include balanced representation across gender, veteran status, and historically underrepresented groups. Hiring panels must comprise diverse evaluators to mitigate unconscious bias and ensure meritocratic evaluation rubrics. The organization enforces zero tolerance for discriminatory practices and audits hiring metrics quarterly to advance inclusive workplace representation.",
+    "tags": ["diversity hiring", "diversity", "inclusion", "guidelines", "equal opportunity", "dei", "bias"]
   },
   {
     "doc_id": "POL-012",
-    "title": "Candidate Data Privacy and PII Protection",
+    "title": "Applicant-Data-Retention Policy and Candidate Privacy Protection",
     "category": "Compliance",
-    "content": "Personal identifiable information including phone numbers, government identification numbers, and residential addresses are encrypted at rest and in transit. Recruiter access to unmasked candidate contact details is strictly restricted until mutual interview consent is confirmed. Candidates retain the legal right under data protection regulations to request complete deletion of their application profile and uploaded documents.",
-    "tags": ["privacy", "pii", "gdpr", "consent", "encryption", "data deletion", "security"]
+    "content": "The applicant-data-retention policy governs the lawful storage, encryption, and lifecycle management of all candidate resumes and application records submitted to the platform. Personal identifiable information and application histories are securely retained for a maximum duration of 24 months from the application date before undergoing automated permanent purging. Candidates may exercise their statutory data privacy rights at any time to request immediate deletion of their personal profile data.",
+    "tags": ["applicant data retention", "data retention", "retention policy", "privacy", "pii", "purge", "deletion", "security"]
   }
 ]

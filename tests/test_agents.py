@@ -73,16 +73,16 @@ class TestDay4AgentsAndTools(unittest.TestCase):
 
     def test_04_check_job_application_status_valid(self):
         """Check 4: Valid record lookup returns full details and escalation recommendation."""
-        # APP-003 is flagged=True, days=37 -> score=1.00 -> should escalate
+        # APP-003 is flagged=True, days=18 -> score=0.80 -> should escalate
         result = check_job_application_status("APP-003")
         self.assertTrue(result["found"])
         self.assertEqual(result["record_id"], "APP-003")
         self.assertEqual(result["status"], "Interview Scheduled")
-        self.assertEqual(result["escalation_score"], 1.0)
+        self.assertEqual(result["escalation_score"], 0.8)
         self.assertTrue(result["escalation_recommended"])
         self.assertIn("ESCALATION RECOMMENDED", result["summary"])
 
-        # APP-001 is flagged=False, days=9 -> score=0.15 -> should not escalate
+        # APP-001 is flagged=False, days=4 -> score=0.0667 -> should not escalate
         res_normal = check_job_application_status("APP-001")
         self.assertTrue(res_normal["found"])
         self.assertFalse(res_normal["escalation_recommended"])

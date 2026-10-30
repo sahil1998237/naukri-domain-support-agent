@@ -551,8 +551,8 @@
     <div class="scenario-selector">
       <label for="scenario-dropdown">Interactive Scenario:</label>
       <select id="scenario-dropdown" onchange="loadScenario(this.value)">
-        <option value="policy">1. Policy RAG Retrieval (e.g. Cooling-Off Period POL-002)</option>
-        <option value="status">2. Application Status & Escalation Math (APP-042)</option>
+        <option value="policy">1. Policy RAG Retrieval (e.g. Cooling-Off Period POL-010)</option>
+        <option value="status">2. Application Status & Escalation Math (APP-003)</option>
         <option value="injection">3. Adversarial Prompt Injection Blocked at Boundary</option>
         <option value="pii">4. In-Flight PII Redaction (+91 Indian Phone Number)</option>
         <option value="autogen">5. AutoGen 2-Agent Governance Review (VerdictModel)</option>
@@ -823,7 +823,7 @@
               </div>
               <div class="node-title">Final Editor (VerdictModel)</div>
               <div class="node-file">📄 review/autogen_review.py:145-210</div>
-              <div class="node-desc">Emits formal <code>VerdictModel</code> with <code>is_approved</code>, compliance score, policy citations, and sanitized answer.</div>
+              <div class="node-desc">Emits formal <code>VerdictModel</code> with <code>approved</code>, <code>final_answer</code>, <code>reason</code>, and compliance score.</div>
               <div class="node-meta">
                 <span>Schema: VerdictModel</span>
                 <span>CustomMessageTypes: Enforced</span>
@@ -960,7 +960,7 @@
         badge: 'badge-agent',
         desc: 'Specialized CrewAI agent responsible for retrieving policy knowledge base articles. Strictly bound to retrieve_policy_context_tool only.',
         inputs: ['Policy question (e.g. cooling-off, notice buyout, interview schedule)'],
-        outputs: ['Verified policy citations (e.g. POL-002) with verbatim text excerpts'],
+        outputs: ['Verified policy citations (e.g. POL-003, POL-010) with verbatim text excerpts'],
         security: 'Least-Autonomy: Possesses zero access to candidate application records or status databases.',
         code: `def create_retrieval_agent(llm):\n    return Agent(\n        role="Naukri Policy Retrieval Specialist",\n        goal="Retrieve verified domain policy documentation",\n        tools=[retrieve_policy_context_tool], # ONLY tool wired\n        llm=llm\n    )`
       },
@@ -970,7 +970,7 @@
         layer: 'Tier 4 — Multi-Agent Crew',
         badge: 'badge-agent',
         desc: 'Specialized CrewAI agent responsible for candidate application status lookups. Strictly bound to check_job_application_status_tool only.',
-        inputs: ['Application record identifier (e.g. APP-042)'],
+        inputs: ['Application record identifier (e.g. APP-003)'],
         outputs: ['Status stage, days active, priority flag, and continuous escalation score'],
         security: 'Least-Autonomy: Possesses zero access to policy vector stores or chunking indexes.',
         code: `def create_lookup_agent(llm):\n    return Agent(\n        role="Naukri Job Application Tracker",\n        goal="Look up candidate application records and compute escalation scores",\n        tools=[check_job_application_status_tool], # ONLY tool wired\n        llm=llm\n    )`
@@ -1025,7 +1025,7 @@
         layer: 'Tier 5 — Application DB',
         badge: 'badge-rag',
         desc: 'Seeded candidate application database containing >=40 records across 5 categories and 5 status stages. Evaluates application escalation using a continuous formula.',
-        inputs: ['Record ID (e.g. APP-042)'],
+        inputs: ['Record ID (e.g. APP-003)'],
         outputs: ['Application details and continuous escalation score [0.0 - 1.0]'],
         security: 'Formula: escalation_score = 0.5 * flagged_priority + 0.5 * min(1.0, days_since_created / 30). 80th-percentile threshold: 0.5667.',
         code: `def check_job_application_status(record_id: str) -> dict:\n    rec = DB.get(record_id)\n    score = 0.5 * int(rec.flagged) + 0.5 * min(1.0, rec.days / 30.0)\n    return {\n        "record_id": record_id,\n        "escalation_score": round(score, 4),\n        "escalation_recommended": score >= 0.5667\n    }`
@@ -1048,9 +1048,9 @@
         badge: 'badge-review',
         desc: 'Second agent in AutoGen review team. Emits a validated Pydantic VerdictModel. Either approves the verified draft or excises hallucinations to produce a sanitized answer.',
         inputs: ['Critique from Policy Compliance Reviewer'],
-        outputs: ['VerdictModel: {is_approved, compliance_score, policy_citations, revised_answer}'],
+        outputs: ['VerdictModel: {approved, final_answer, reason, compliance_score, policy_citations}'],
         security: 'Avoids Autogen Trap 5 by registering custom_message_types=[StructuredMessage[VerdictModel]] on the Team.',
-        code: `class VerdictModel(BaseModel):\n    is_approved: bool\n    policy_citations: List[str]\n    compliance_score: float = Field(ge=0.0, le=1.0)\n    revised_answer: str\n    has_hallucinations_removed: bool`
+        code: `class VerdictModel(BaseModel):\n    approved: bool\n    final_answer: str\n    reason: str\n    policy_citations: List[str]\n    compliance_score: float = Field(ge=0.0, le=1.0)`
       },
       'output-schema': {
         title: 'Validated Output Contract',
@@ -1068,7 +1068,7 @@
     // Scenarios Configuration
     const SCENARIOS = {
       policy: {
-        name: "Policy RAG Retrieval (POL-002)",
+        name: "Policy RAG Retrieval (POL-010)",
         path: ['client', 'gateway', 'logging', 'pii', 'injection', 'cache', 'memory', 'retrieval-agent', 'chroma', 'calibrator', 'composer-agent', 'autogen-reviewer', 'autogen-editor', 'output-schema'],
         stepText: [
           "Candidate submits: 'What is the cooling-off period after interview rejection?'",
@@ -1081,17 +1081,17 @@
           "CrewAI orchestrator delegates query to Retrieval Agent ONLY",
           "Retrieval Agent queries ChromaDB sentence collection (all-MiniLM-L6-v2)",
           "Calibrator checks cosine similarity: 0.6872 >= 0.4000 (GROUNDED)",
-          "Composer Agent drafts structured policy response citing POL-002",
-          "AutoGen Reviewer audits draft: fully aligned with POL-002",
-          "Final Editor emits VerdictModel: is_approved=True, score=1.0",
-          "Gateway returns HTTP 200 AskResponse with verified POL-002 citation"
+          "Composer Agent drafts structured policy response citing POL-010",
+          "AutoGen Reviewer audits draft: fully aligned with POL-010",
+          "Final Editor emits VerdictModel: approved=True, compliance_score=1.0",
+          "Gateway returns HTTP 200 AskResponse with verified POL-010 citation"
         ]
       },
       status: {
-        name: "Application Status & Escalation Math (APP-042)",
+        name: "Application Status & Escalation Math (APP-003)",
         path: ['client', 'gateway', 'logging', 'pii', 'injection', 'cache', 'memory', 'lookup-agent', 'dataset', 'composer-agent', 'output-schema'],
         stepText: [
-          "Candidate submits: 'Please check the status of my application APP-042'",
+          "Candidate submits: 'Please check the status of my application APP-003'",
           "FastAPI Gateway receives inquiry on POST /ask",
           "Logging middleware generates trace_id and begins latency timer",
           "PII Guardrail checks for sensitive credentials (Clean)",
@@ -1099,8 +1099,8 @@
           "Cache Miss: application status requests bypass response cache",
           "Session Memory assigns session identifier",
           "CrewAI orchestrator delegates query to Lookup Agent ONLY",
-          "Lookup Agent queries Seeded Applications DB: Record found (Days: 22, Flagged: True)",
-          "Escalation formula computed: 0.5*1 + 0.5*(22/30) = 0.8667 >= 0.5667 (ESCALATE)",
+          "Lookup Agent queries Seeded Applications DB: Record found (Days: 18, Flagged: True)",
+          "Escalation formula computed: 0.5*1 + 0.5*(18/30) = 0.8000 >= 0.5667 (ESCALATE)",
           "Composer Agent formats formal escalation update report",
           "Gateway delivers HTTP 200 AskResponse with escalation_needed=True"
         ]
@@ -1127,7 +1127,7 @@
           "Sanitized query forwarded to injection filter (Safe)",
           "Cache Miss for newly redacted query",
           "Session memory logs safe sanitized text",
-          "Retrieval Agent retrieves POL-004 Interview Scheduling policy",
+          "Retrieval Agent retrieves POL-003 Interview Scheduling policy",
           "ChromaDB returns verified policy context",
           "Grounding verified above 0.4000 threshold",
           "Composer Agent drafts answer addressing scheduling policy safely",
@@ -1140,10 +1140,10 @@
         stepText: [
           "Candidate asks complex policy question on notice period buyout",
           "FastAPI passes sanitized query to Session Memory",
-          "Retrieval Agent obtains POL-006 documentation",
+          "Retrieval Agent obtains POL-008 documentation",
           "Composer Agent creates initial response draft",
           "Draft passed into AutoGen RoundRobinGroupChat (MaxMessageTermination=3)",
-          "Policy-Compliance-Reviewer performs line-by-line audit against POL-006",
+          "Policy-Compliance-Reviewer performs line-by-line audit against POL-008",
           "Final Editor agent emits formal Pydantic VerdictModel (Compliance Score: 1.0)",
           "Validated response delivered to candidate with audit certificate"
         ]

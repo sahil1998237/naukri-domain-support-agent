@@ -70,7 +70,7 @@ flowchart TD
         direction TB
         CHROMA[("ChromaDB Vector Store<br/><code>rag/indexer.py</code><br/>- Fixed Chunks Collection<br/>- Sentence Chunks Collection")]:::storage
         EMB["SentenceTransformers<br/><code>all-MiniLM-L6-v2</code>"]:::storage
-        DB[("Seeded Job Applications DB<br/><code>data/dataset.py</code><br/><i>(>=40 seeded records · 5 categories)</i>")]:::storage
+        DB[("Seeded Job Applications DB<br/><code>dataset.py</code><br/><i>(>=40 seeded records · 5 categories)</i>")]:::storage
         CALIB["Similarity Grounding Calibrator<br/><code>rag/retriever.py</code><br/><i>(Empirical Threshold: 0.4000)</i>"]:::storage
     end
 
@@ -83,7 +83,7 @@ flowchart TD
     end
 
     subgraph OutputLayer ["8. Validated Output & Delivery"]
-        SCHEMA["Pydantic Response Validation<br/><code>agents/schemas.py:AgentResponse</code><br/><i>(answer, sources, confidence, escalation)</i>"]:::gateway
+        SCHEMA["Pydantic Response Validation<br/><code>agents/schemas.py:NaukriSupportResponse</code><br/><i>(answer, sources, confidence, escalation)</i>"]:::gateway
         CLIENT_OUT["Client Final Delivery<br/>(HTTP 200 / WS Message)"]:::client
     end
 
@@ -155,20 +155,20 @@ sequenceDiagram
     Mem->>Crew: crew.kickoff()
     Crew->>RetAgent: Delegate retrieval task
     RetAgent->>Chroma: Query vector similarity (all-MiniLM-L6-v2)
-    Chroma-->>RetAgent: Top-1 Doc: POL-002 (Similarity: 0.6872)
+    Chroma-->>RetAgent: Top-1 Doc: POL-010 (Similarity: 0.6402)
     RetAgent-->>Crew: Verified context (score > 0.4000 threshold)
     Crew->>Composer: Synthesize final candidate answer
-    Composer-->>Mem: AgentResponse(answer, sources=['POL-002'], confidence=0.92)
-    Mem-->>GW: Structured AgentResponse
+    Composer-->>Mem: NaukriSupportResponse(answer, sources=['POL-010'], confidence=0.92)
+    Mem-->>GW: Structured NaukriSupportResponse
     GW->>OutputGuard: verify_output_groundedness(clean_query, answer)
-    OutputGuard-->>GW: Grounded (Score: 0.6872 >= 0.4000)
+    OutputGuard-->>GW: Grounded (Score: 0.6402 >= 0.4000)
     GW->>Cache: cache.set(clean_query, response)
     GW-->>Candidate: HTTP 200 AskResponse (ExecutionStatus: COMPLETED_SAFE)
 ```
 
 ---
 
-### Lifecycle B: Application Status & Escalation Inquiry (e.g., "Check status for APP-042")
+### Lifecycle B: Application Status & Escalation Inquiry (e.g., "Check status for APP-003")
 
 ```mermaid
 sequenceDiagram
@@ -182,20 +182,20 @@ sequenceDiagram
     participant AppDB as Job Application DB (dataset.py)
     participant Composer as Composer Agent
 
-    Candidate->>GW: POST /ask {"query": "Please check status for APP-042"}
+    Candidate->>GW: POST /ask {"query": "Please check status for APP-003"}
     GW->>Guard: PII & Prompt Injection Check
     Guard-->>GW: Validated & Safe
     GW->>Mem: process_support_query()
     Mem->>Crew: Run CrewAI ReAct loop
-    Crew->>LookAgent: Invoke check_job_application_status_tool("APP-042")
+    Crew->>LookAgent: Invoke check_job_application_status_tool("APP-003")
     Note over LookAgent,AppDB: Least-Autonomy: Only Lookup Agent has DB tool
-    LookAgent->>AppDB: Query record APP-042
-    AppDB-->>LookAgent: Found (Status: In Review, Days: 22, Flagged: True)
-    LookAgent->>LookAgent: Compute Escalation Score: 0.5*1 + 0.5*(22/30) = 0.8667
-    Note over LookAgent: 0.8667 >= 0.5667 -> ESCALATION RECOMMENDED
+    LookAgent->>AppDB: Query record APP-003
+    AppDB-->>LookAgent: Found (Status: Interview Scheduled, Days: 18, Flagged: True)
+    LookAgent->>LookAgent: Compute Escalation Score: 0.5*1 + 0.5*(18/30) = 0.8000
+    Note over LookAgent: 0.8000 >= 0.5667 -> ESCALATION RECOMMENDED
     LookAgent-->>Crew: Status summary + Escalation recommendation
     Crew->>Composer: Synthesize formal status report
-    Composer-->>GW: AgentResponse(escalation_needed=True, confidence=1.0)
+    Composer-->>GW: NaukriSupportResponse(escalation_needed=True, confidence=1.0)
     GW-->>Candidate: HTTP 200 AskResponse with application_details and escalation flag
 ```
 

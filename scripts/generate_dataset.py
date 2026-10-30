@@ -8,7 +8,7 @@ all Day 1 capstone requirements:
 - INR 300,000 to INR 3,000,000 salary range
 - 5 distinct categories with equal 20% target weights (all guaranteed >= 1)
 - 5 distinct statuses with weighted distribution (all guaranteed >= 1)
-- Non-negative days since created (1 to 60 days, documented max = 60)
+- Non-negative days since created (0 to 30 days, integer 0–30 as required)
 - Exactly 10 records (20%) flagged for priority review (target: 10% - 30%)
 - Output saved as structured JSON
 """
@@ -29,9 +29,9 @@ MAX_SALARY_INR: int = 3_000_000
 SALARY_STEP_INR: int = 25_000  # Multiples of 25,000 for realistic salary figures
 
 # Application timeline window
-# Documented maximum: 60 days (standard active application window on job boards)
-MIN_DAYS_SINCE_CREATED: int = 1
-MAX_DAYS_SINCE_CREATED: int = 60
+# Documented window: 0 to 30 days (satisfies capstone specification 0–30 days)
+MIN_DAYS_SINCE_CREATED: int = 0
+MAX_DAYS_SINCE_CREATED: int = 30
 
 # Priority review target: exactly 10 of 50 = 20% (satisfies 10% - 30% range)
 PRIORITY_REVIEW_COUNT: int = 10

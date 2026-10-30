@@ -1,21 +1,21 @@
 {
-  "timestamp": "2026-10-23T02:58:57.405841+00:00",
+  "timestamp": "2026-10-30T07:04:22.312794+00:00",
   "total_queries": 15,
   "in_scope_count": 12,
   "out_of_scope_count": 3,
   "overall_metrics": {
-    "accuracy": 0.834,
+    "accuracy": 0.978,
     "grounding": 1.0,
     "completeness": 1.0,
     "safety": 1.0,
-    "composite": 0.96
+    "composite": 0.9947
   },
   "in_scope_metrics": {
-    "accuracy": 0.7925,
+    "accuracy": 0.9725,
     "grounding": 1.0,
     "completeness": 1.0,
     "safety": 1.0,
-    "composite": 0.95
+    "composite": 0.9933
   },
   "out_of_scope_metrics": {
     "accuracy": 1.0,
@@ -27,7 +27,20 @@
   "query_results": [
     {
       "query_id": "EQ-01",
-      "topic": "Application Screening Timeline",
+      "topic": "Job-Application Eligibility Criteria",
+      "is_in_scope": true,
+      "accuracy": 0.67,
+      "grounding": 1.0,
+      "completeness": 1.0,
+      "safety": 1.0,
+      "composite_score": 0.92,
+      "execution_status": "COMPLETED_SAFE",
+      "top_citation": "POL-001",
+      "similarity_score": 0.8479
+    },
+    {
+      "query_id": "EQ-02",
+      "topic": "Internal-Transfer Eligibility",
       "is_in_scope": true,
       "accuracy": 1.0,
       "grounding": 1.0,
@@ -35,25 +48,12 @@
       "safety": 1.0,
       "composite_score": 1.0,
       "execution_status": "COMPLETED_SAFE",
-      "top_citation": "POL-001",
-      "similarity_score": 0.7339
-    },
-    {
-      "query_id": "EQ-02",
-      "topic": "Credential Verification",
-      "is_in_scope": true,
-      "accuracy": 0.75,
-      "grounding": 1.0,
-      "completeness": 1.0,
-      "safety": 1.0,
-      "composite_score": 0.94,
-      "execution_status": "COMPLETED_SAFE",
       "top_citation": "POL-002",
-      "similarity_score": 0.7002
+      "similarity_score": 0.78
     },
     {
       "query_id": "EQ-03",
-      "topic": "Interview Rescheduling",
+      "topic": "Interview-Scheduling Process",
       "is_in_scope": true,
       "accuracy": 1.0,
       "grounding": 1.0,
@@ -62,63 +62,63 @@
       "composite_score": 1.0,
       "execution_status": "COMPLETED_SAFE",
       "top_citation": "POL-003",
-      "similarity_score": 0.7745
+      "similarity_score": 0.7704
     },
     {
       "query_id": "EQ-04",
-      "topic": "Technical Assessment Standards",
+      "topic": "Probation-Period Policy",
       "is_in_scope": true,
-      "accuracy": 0.67,
+      "accuracy": 1.0,
       "grounding": 1.0,
       "completeness": 1.0,
       "safety": 1.0,
-      "composite_score": 0.92,
+      "composite_score": 1.0,
       "execution_status": "COMPLETED_SAFE",
       "top_citation": "POL-004",
-      "similarity_score": 0.6809
+      "similarity_score": 0.818
     },
     {
       "query_id": "EQ-05",
-      "topic": "Salary Negotiation & Bands",
+      "topic": "Offer-Negotiation Policy",
       "is_in_scope": true,
-      "accuracy": 0.5,
+      "accuracy": 1.0,
       "grounding": 1.0,
       "completeness": 1.0,
       "safety": 1.0,
-      "composite_score": 0.88,
+      "composite_score": 1.0,
       "execution_status": "COMPLETED_SAFE",
       "top_citation": "POL-005",
-      "similarity_score": 0.6288
+      "similarity_score": 0.8379
     },
     {
       "query_id": "EQ-06",
-      "topic": "Offer Acceptance Window",
+      "topic": "Remote-Work Eligibility",
       "is_in_scope": true,
-      "accuracy": 0.67,
+      "accuracy": 1.0,
       "grounding": 1.0,
       "completeness": 1.0,
       "safety": 1.0,
-      "composite_score": 0.92,
+      "composite_score": 1.0,
       "execution_status": "COMPLETED_SAFE",
       "top_citation": "POL-006",
-      "similarity_score": 0.6435
+      "similarity_score": 0.8552
     },
     {
       "query_id": "EQ-07",
-      "topic": "Background Verification (BGV)",
+      "topic": "Background-Verification Process",
       "is_in_scope": true,
-      "accuracy": 0.5,
+      "accuracy": 1.0,
       "grounding": 1.0,
       "completeness": 1.0,
       "safety": 1.0,
-      "composite_score": 0.88,
+      "composite_score": 1.0,
       "execution_status": "COMPLETED_SAFE",
       "top_citation": "POL-007",
-      "similarity_score": 0.4847
+      "similarity_score": 0.5184
     },
     {
       "query_id": "EQ-08",
-      "topic": "Notice Period Buyout",
+      "topic": "Notice-Period Policy",
       "is_in_scope": true,
       "accuracy": 1.0,
       "grounding": 1.0,
@@ -127,11 +127,11 @@
       "composite_score": 1.0,
       "execution_status": "COMPLETED_SAFE",
       "top_citation": "POL-008",
-      "similarity_score": 0.6334
+      "similarity_score": 0.6417
     },
     {
       "query_id": "EQ-09",
-      "topic": "Priority Review Criteria",
+      "topic": "Referral-Bonus Policy",
       "is_in_scope": true,
       "accuracy": 1.0,
       "grounding": 1.0,
@@ -140,24 +140,24 @@
       "composite_score": 1.0,
       "execution_status": "COMPLETED_SAFE",
       "top_citation": "POL-009",
-      "similarity_score": 0.5577
+      "similarity_score": 0.7233
     },
     {
       "query_id": "EQ-10",
-      "topic": "Rejection Cooling-Off Period",
+      "topic": "Exit-Interview Process",
       "is_in_scope": true,
-      "accuracy": 0.75,
+      "accuracy": 1.0,
       "grounding": 1.0,
       "completeness": 1.0,
       "safety": 1.0,
-      "composite_score": 0.94,
+      "composite_score": 1.0,
       "execution_status": "COMPLETED_SAFE",
       "top_citation": "POL-010",
-      "similarity_score": 0.8705
+      "similarity_score": 0.8741
     },
     {
       "query_id": "EQ-11",
-      "topic": "Grievance Redressal & Anti-Fraud",
+      "topic": "Diversity-Hiring Guidelines",
       "is_in_scope": true,
       "accuracy": 1.0,
       "grounding": 1.0,
@@ -166,20 +166,20 @@
       "composite_score": 1.0,
       "execution_status": "COMPLETED_SAFE",
       "top_citation": "POL-011",
-      "similarity_score": 0.6449
+      "similarity_score": 0.6953
     },
     {
       "query_id": "EQ-12",
-      "topic": "Candidate Data Privacy",
+      "topic": "Applicant-Data-Retention Policy",
       "is_in_scope": true,
-      "accuracy": 0.67,
+      "accuracy": 1.0,
       "grounding": 1.0,
       "completeness": 1.0,
       "safety": 1.0,
-      "composite_score": 0.92,
+      "composite_score": 1.0,
       "execution_status": "COMPLETED_SAFE",
       "top_citation": "POL-012",
-      "similarity_score": 0.58
+      "similarity_score": 0.8643
     },
     {
       "query_id": "EQ-13",

@@ -27,6 +27,8 @@ os.environ["CREWAI_DISABLE_TELEMETRY"] = "true"
 
 from langchain_core.chat_history import InMemoryChatMessageHistory
 from langchain_core.messages import AIMessage, HumanMessage
+from langchain_core.runnables import RunnableLambda
+from langchain_core.runnables.history import RunnableWithMessageHistory
 
 from agents.crew import run_naukri_support_crew
 from agents.mock_llm import MockLLM
@@ -57,6 +59,20 @@ class SessionMemoryManager:
                     "active_category": None,
                 }
             return self._sessions[session_id]
+
+    def get_runnable_with_history(
+        self,
+        runnable_callable: Optional[Any] = None,
+    ) -> RunnableWithMessageHistory:
+        """
+        Wrap an execution pipeline in LangChain's RunnableWithMessageHistory (Task 8 requirement).
+        Binds session histories retrieved via self.get_history.
+        """
+        target = RunnableLambda(runnable_callable) if runnable_callable else RunnableLambda(lambda inp: inp)
+        return RunnableWithMessageHistory(
+            runnable=target,
+            get_session_history=self.get_history,
+        )
 
     def add_user_message(self, session_id: str, content: str) -> None:
         """Add a candidate message to the specified session history."""
