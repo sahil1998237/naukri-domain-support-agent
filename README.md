@@ -1,40 +1,70 @@
 # 🎯 Naukri.com Domain Support Agent (Capstone) — Track: Recruitment & HR
 
-> **Capstone Track:** Naukri.com (Recruitment & HR)  
-> **Execution Mode:** 100% Local `MOCK_LLM` (Zero API Keys, Zero Paid Services, Deterministic Transcripts)  
-> **Zero Telemetry Enforced:** `CREWAI_DISABLE_TELEMETRY=true` & `OTEL_SDK_DISABLED=true`  
-> **Test Suite:** **117 / 117 tests passing (100%)** in under 50 seconds (`pytest`)  
-> **Integrity Audit:** **16 / 16 Capstone tasks passed (100%)** via `scripts/run_capstone_audit.py`  
-> **Public Repository:** [https://github.com/sahil1998237/naukri-domain-support-agent](https://github.com/sahil1998237/naukri-domain-support-agent)
+<div align="center">
+
+![Python](https://img.shields.io/badge/Python-3.13-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Tests](https://img.shields.io/badge/Tests-117%20Passed-2EA44F?style=for-the-badge&logo=pytest&logoColor=white)
+![Audit](https://img.shields.io/badge/Audit-16%20of%2016%20Passed-success?style=for-the-badge&logo=checkmarx&logoColor=white)
+![Telemetry](https://img.shields.io/badge/Telemetry-Disabled%20(Zero%20Network)-red?style=for-the-badge)
+![LLM Mode](https://img.shields.io/badge/LLM-Deterministic%20MockLLM-blueviolet?style=for-the-badge)
+
+<br>
+
+> **Track Completed:** Recruitment & HR Domain Support Agent  
+> **Evaluation Mode:** 100% Local `MOCK_LLM` (Zero API Keys, Zero Paid Services, Deterministic Transcripts)  
+> **Safety & Telemetry:** `CREWAI_DISABLE_TELEMETRY=true` & `OTEL_SDK_DISABLED=true`  
+> **Public GitHub Repository:** [https://github.com/sahil1998237/naukri-domain-support-agent](https://github.com/sahil1998237/naukri-domain-support-agent)
+
+</div>
 
 ---
 
-## 📑 Table of Contents
+## 📑 Capstone Architecture & Navigation Hub
 
-1. [Interactive Runtime Visualizer](#-interactive-runtime-visualizer)
-2. [Quick-Start Evaluation Guide (60 Seconds)](#-quick-start-evaluation-guide-60-seconds)
-3. [Part 1: Knowledge Base & RAG Core](#-part-1-knowledge-base--rag-core)
-   - [Task 1: Deterministic Synthetic Dataset](#task-1-deterministic-synthetic-dataset-generator)
-   - [Task 2: 12 Mandatory Knowledge Base Policies](#task-2-12-domain-policy-documents)
-   - [Task 3: Dual Chunking Strategies & Vector Indexing](#task-3-dual-chunking-strategies--chromadb-indexing)
-   - [Task 4: Empirical Similarity Calibration & Grounded Retrieval](#task-4-empirical-similarity-calibration--grounded-retrieval)
-   - [Task 5: Comparative Evaluation of Chunking Strategies](#task-5-comparative-evaluation-of-chunking-strategies)
-4. [Part 2: Multi-Agent System & Guardrails](#-part-2-multi-agent-system--guardrails)
-   - [Task 6: Application Status Tool & Continuous Escalation Score](#task-6-application-status-tool--continuous-escalation-formula)
-   - [Task 7: CrewAI Multi-Agent Team & Deterministic MockLLM](#task-7-crewai-multi-agent-team--deterministic-mockllm)
-   - [Task 8: LangChain Multi-Turn Session Memory](#task-8-langchain-multi-turn-session-memory)
-   - [Task 9: Pydantic Structured Output Validation](#task-9-pydantic-structured-output-validation)
-   - [Task 10: Input/Output Guardrails Triad](#task-10-input--output-guardrails-triad)
-5. [Part 3: Deployment & Evaluation](#-part-3-deployment--evaluation)
-   - [Task 11: Production-Grade FastAPI Backend (REST & WebSocket)](#task-11-fastapi-backend-service-layer)
-   - [Task 12: Structured JSON-Lines Logging & Zero PII Leakage](#task-12-structured-json-lines-logging-middleware)
-   - [Task 13: 15-Query Evaluation Suite & 4-Dimension Rubric](#task-13-15-query-evaluation-suite--4-dimension-rubric)
-6. [Part 4: Review Stage & Production Hardening](#-part-4-review-stage--production-hardening)
-   - [Task 14: AutoGen Multi-Agent Policy Review Stage](#task-14-autogen-multi-agent-policy-review-stage)
-   - [Task 15: Enterprise Governance, Least-Autonomy & Cost Budget Cap](#task-15-governance-least-autonomy--cost-budget-control)
-   - [Task 16: Response Caching & Latency Optimization](#task-16-response-caching--latency-optimization)
-7. [Repository Directory Structure](#-repository-directory-structure)
-8. [16-Task Traceability Matrix](#-16-task-traceability-matrix)
+<div align="center">
+
+| [⚡ **Quick-Start (60s)**](#-quick-start-evaluation-guide-60-seconds) | [📐 **Interactive Visualizer**](#-interactive-runtime-visualizer) | [📊 **16-Task Traceability Matrix**](#-16-task-traceability-matrix) | [📂 **Directory Tree**](#-repository-directory-structure) |
+| :---: | :---: | :---: | :---: |
+
+</div>
+
+### 🗺️ Four-Part Engineering Blueprint
+
+| Architectural Tier | Capstone Focus | Tasks Included & Key Deliverables | Core Architecture & Stack |
+| :--- | :--- | :--- | :--- |
+| **Part 1**<br><sub>Knowledge Base & RAG Core</sub> | **Deterministic Grounding & Retrieval** | • [Task 1: Seeded Dataset Generator](#task-1-deterministic-synthetic-dataset-generator)<br>• [Task 2: 12 Domain Policies](#task-2-12-domain-policy-documents)<br>• [Task 3: Dual Chunking & ChromaDB](#task-3-dual-chunking-strategies--chromadb-indexing)<br>• [Task 4: Calibrated Retrieval (0.4000)](#task-4-empirical-similarity-calibration--grounded-retrieval)<br>• [Task 5: Precision/Recall Comparison](#task-5-comparative-evaluation-of-chunking-strategies) | `ChromaDB` (Cosine Space)<br>`all-MiniLM-L6-v2`<br>NLTK Sentence Tokenizer |
+| **Part 2**<br><sub>Multi-Agent System & Guardrails</sub> | **Autonomous Orchestration & Safety** | • [Task 6: Continuous Escalation Tool](#task-6-application-status-tool--continuous-escalation-formula)<br>• [Task 7: CrewAI Multi-Agent Team](#task-7-crewai-multi-agent-team--deterministic-mockllm)<br>• [Task 8: Session Memory Layer](#task-8-langchain-multi-turn-session-memory)<br>• [Task 9: Pydantic Output Validation](#task-9-pydantic-structured-output-validation)<br>• [Task 10: Input/Output Guardrails](#task-10-input--output-guardrails-triad) | `CrewAI 1.15.28`<br>`Deterministic MockLLM`<br>`LangChain Session History`<br>Regex PII Masker & Guardrails |
+| **Part 3**<br><sub>Deployment & Evaluation</sub> | **Production Serving & Benchmarking** | • [Task 11: FastAPI REST & WebSocket](#task-11-fastapi-backend-service-layer)<br>• [Task 12: Zero-PII Structured Logging](#task-12-structured-json-lines-logging-middleware)<br>• [Task 13: 15-Query Evaluation Suite](#task-13-15-query-evaluation-suite--4-dimension-rubric) | `FastAPI` (Asyncio Thread Worker)<br>`JSON-Lines Access Log`<br>4-Dimension Rubric (0.99 Composite) |
+| **Part 4**<br><sub>Review Stage & Hardening</sub> | **Multi-Agent Editorial & Governance** | • [Task 14: AutoGen 2-Agent Review](#task-14-autogen-multi-agent-policy-review-stage)<br>• [Task 15: Least-Autonomy & 2k Budget](#task-15-governance-least-autonomy--cost-budget-control)<br>• [Task 16: Normalized LRU Response Cache](#task-16-response-caching--latency-optimization) | `AutoGen 0.7+` (VerdictModel)<br>EU AI Act / DPDP Compliance<br>Thread-Safe LRU Cache (>400kx speedup) |
+
+<details>
+<summary><b>🔍 Click to expand detailed subsection links (Tasks 1 through 16)</b></summary>
+
+- [Part 1: Knowledge Base & RAG Core](#-part-1-knowledge-base--rag-core)
+  - [Task 1: Deterministic Synthetic Dataset Generator](#task-1-deterministic-synthetic-dataset-generator)
+  - [Task 2: 12 Domain Policy Documents](#task-2-12-domain-policy-documents)
+  - [Task 3: Dual Chunking Strategies & ChromaDB Indexing](#task-3-dual-chunking-strategies--chromadb-indexing)
+  - [Task 4: Empirical Similarity Calibration & Grounded Retrieval](#task-4-empirical-similarity-calibration--grounded-retrieval)
+  - [Task 5: Comparative Evaluation of Chunking Strategies](#task-5-comparative-evaluation-of-chunking-strategies)
+- [Part 2: Multi-Agent System & Guardrails](#-part-2-multi-agent-system--guardrails)
+  - [Task 6: Application Status Tool & Continuous Escalation Formula](#task-6-application-status-tool--continuous-escalation-formula)
+  - [Task 7: CrewAI Multi-Agent Team & Deterministic MockLLM](#task-7-crewai-multi-agent-team--deterministic-mockllm)
+  - [Task 8: LangChain Multi-Turn Session Memory](#task-8-langchain-multi-turn-session-memory)
+  - [Task 9: Pydantic Structured Output Validation](#task-9-pydantic-structured-output-validation)
+  - [Task 10: Input & Output Guardrails Triad](#task-10-input--output-guardrails-triad)
+- [Part 3: Deployment & Evaluation](#-part-3-deployment--evaluation)
+  - [Task 11: FastAPI Backend Service Layer](#task-11-fastapi-backend-service-layer)
+  - [Task 12: Structured JSON-Lines Logging Middleware](#task-12-structured-json-lines-logging-middleware)
+  - [Task 13: 15-Query Evaluation Suite & 4-Dimension Rubric](#task-13-15-query-evaluation-suite--4-dimension-rubric)
+- [Part 4: Review Stage & Production Hardening](#-part-4-review-stage--production-hardening)
+  - [Task 14: AutoGen Multi-Agent Policy Review Stage](#task-14-autogen-multi-agent-policy-review-stage)
+  - [Task 15: Governance, Least-Autonomy & Cost Budget Control](#task-15-governance-least-autonomy--cost-budget-control)
+  - [Task 16: Response Caching & Latency Optimization](#task-16-response-caching--latency-optimization)
+- [Repository Directory Structure](#-repository-directory-structure)
+- [16-Task Traceability Matrix](#-16-task-traceability-matrix)
+- [Final Capstone Submission Statement](#-final-capstone-submission-statement)
+
+</details>
 
 ---
 
