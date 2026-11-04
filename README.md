@@ -2,11 +2,11 @@
 
 <div align="center">
 
-![Python](https://img.shields.io/badge/Python-3.13-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Tests](https://img.shields.io/badge/Tests-117%20Passed-2EA44F?style=for-the-badge&logo=pytest&logoColor=white)
-![Audit](https://img.shields.io/badge/Audit-16%20of%2016%20Passed-success?style=for-the-badge&logo=checkmarx&logoColor=white)
-![Telemetry](https://img.shields.io/badge/Telemetry-Disabled%20(Zero%20Network)-red?style=for-the-badge)
-![LLM Mode](https://img.shields.io/badge/LLM-Deterministic%20MockLLM-blueviolet?style=for-the-badge)
+[![Python](https://img.shields.io/badge/Python-3.13-3776AB?style=for-the-badge&logo=python&logoColor=white)](#-quick-start-evaluation-guide-60-seconds)
+[![Tests](https://img.shields.io/badge/Tests-117%20Passed-2EA44F?style=for-the-badge&logo=pytest&logoColor=white)](tests/)
+[![Audit](https://img.shields.io/badge/Audit-16%20of%2016%20Passed-success?style=for-the-badge&logo=checkmarx&logoColor=white)](scripts/run_capstone_audit.py)
+[![Telemetry](https://img.shields.io/badge/Telemetry-Disabled%20(Zero%20Network)-red?style=for-the-badge)](#task-7-crewai-multi-agent-team--deterministic-mockllm)
+[![LLM Mode](https://img.shields.io/badge/LLM-Deterministic%20MockLLM-blueviolet?style=for-the-badge)](agents/mock_llm.py)
 
 <br>
 
