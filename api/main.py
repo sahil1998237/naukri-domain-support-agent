@@ -41,6 +41,7 @@ from rag.chunking import chunk_policy_document
 from rag.indexer import (
     COLLECTION_FIXED,
     COLLECTION_SENTENCE,
+    ensure_collections_indexed,
     get_chroma_client,
     get_embedding_function,
 )
@@ -256,9 +257,17 @@ def health_check() -> HealthResponse:
         sent_count = col_sent.count()
         chroma_ok = True
     except Exception:
-        fixed_count = 0
-        sent_count = 0
-        chroma_ok = False
+        try:
+            ensure_collections_indexed()
+            col_fixed = client.get_collection(COLLECTION_FIXED)
+            col_sent = client.get_collection(COLLECTION_SENTENCE)
+            fixed_count = col_fixed.count()
+            sent_count = col_sent.count()
+            chroma_ok = True
+        except Exception:
+            fixed_count = 0
+            sent_count = 0
+            chroma_ok = False
 
     active_sessions = len(_GLOBAL_MEMORY._sessions)
 

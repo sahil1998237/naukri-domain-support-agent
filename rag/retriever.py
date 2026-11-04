@@ -20,6 +20,7 @@ from rag.indexer import (
     COLLECTION_SENTENCE,
     DEFAULT_DB_PATH,
     DEFAULT_MODEL_NAME,
+    ensure_collections_indexed,
     get_chroma_client,
     get_embedding_function,
 )
@@ -49,10 +50,17 @@ def query_policies(
     client = get_chroma_client(db_path)
     ef = get_embedding_function(model_name)
 
-    collection = client.get_collection(
-        name=collection_name,
-        embedding_function=ef,
-    )
+    try:
+        collection = client.get_collection(
+            name=collection_name,
+            embedding_function=ef,
+        )
+    except Exception:
+        ensure_collections_indexed(db_path=db_path, model_name=model_name)
+        collection = client.get_collection(
+            name=collection_name,
+            embedding_function=ef,
+        )
 
     results = collection.query(
         query_texts=[query],

@@ -70,7 +70,8 @@ def run_capstone_audit() -> Dict[str, Any]:
         record_check("Task 2", "12 Domain Policy Documents", False, "Missing policies.json")
 
     # Task 3: ChromaDB Vector Indexing
-    from rag.indexer import get_chroma_client, COLLECTION_FIXED, COLLECTION_SENTENCE
+    from rag.indexer import get_chroma_client, COLLECTION_FIXED, COLLECTION_SENTENCE, ensure_collections_indexed
+    ensure_collections_indexed()
     client = get_chroma_client()
     try:
         col_f = client.get_collection(COLLECTION_FIXED)

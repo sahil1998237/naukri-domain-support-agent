@@ -34,8 +34,10 @@ class TestKnowledgeBaseAndRAG(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        """Load the 12 policy documents once."""
+        """Load the 12 policy documents once and ensure vector collections exist."""
         cls.policies = load_policies()
+        from rag.indexer import ensure_collections_indexed
+        ensure_collections_indexed()
 
     def test_01_knowledge_base_count(self):
         """Check 1: Knowledge base has at least 12 policy documents."""

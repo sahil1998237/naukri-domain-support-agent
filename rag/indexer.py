@@ -165,6 +165,24 @@ def build_indexes(
     return summary
 
 
+def ensure_collections_indexed(
+    db_path: Optional[Path | str] = None,
+    model_name: str = DEFAULT_MODEL_NAME,
+) -> None:
+    """
+    Ensure both ChromaDB collections exist and have at least 36 chunks indexed.
+    If not, automatically invokes build_indexes() so fresh clones are immediately ready.
+    """
+    client = get_chroma_client(db_path)
+    try:
+        col_f = client.get_collection(COLLECTION_FIXED)
+        col_s = client.get_collection(COLLECTION_SENTENCE)
+        if col_f.count() < 36 or col_s.count() < 36:
+            build_indexes(db_path=db_path, model_name=model_name)
+    except Exception:
+        build_indexes(db_path=db_path, model_name=model_name)
+
+
 if __name__ == "__main__":
     print("Building ChromaDB policy indexes for both chunking strategies...")
     result = build_indexes(force_reindex=True)
